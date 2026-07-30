@@ -37,34 +37,48 @@ struct TwentyFourFramesWidgetEntryView : View {
                 }
                 .widgetURL(URL(string: "twentyfourframes://snap"))
             default:
-                defaultSmallWidgetView
+                smallWidgetContent
+                    .widgetContainerBackground()
+                    .widgetURL(URL(string: "twentyfourframes://snap"))
             }
         } else {
-            defaultSmallWidgetView
+            smallWidgetContent
+                .widgetContainerBackground()
+                .widgetURL(URL(string: "twentyfourframes://snap"))
         }
     }
     
-    private var defaultSmallWidgetView: some View {
-        ZStack {
-            Color.black
-            VStack(spacing: 8) {
-                ZStack {
-                    Circle()
-                        .fill(Color.white.opacity(0.15))
-                        .frame(width: 54, height: 54)
-                    Circle()
-                        .fill(Color.white)
-                        .frame(width: 44, height: 44)
-                    Image(systemName: "camera.fill")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.black)
-                }
-                Text("Instant Snap")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundColor(.white)
+    private var smallWidgetContent: some View {
+        VStack(spacing: 8) {
+            ZStack {
+                Circle()
+                    .fill(Color.white.opacity(0.15))
+                    .frame(width: 54, height: 54)
+                Circle()
+                    .fill(Color.white)
+                    .frame(width: 44, height: 44)
+                Image(systemName: "camera.fill")
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(.black)
+            }
+            Text("Instant Snap")
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(.white)
+        }
+    }
+}
+
+extension View {
+    @ViewBuilder
+    func widgetContainerBackground() -> some View {
+        if #available(iOS 17.0, *) {
+            self.containerBackground(Color.black, for: .widget)
+        } else {
+            ZStack {
+                Color.black
+                self
             }
         }
-        .widgetURL(URL(string: "twentyfourframes://snap"))
     }
 }
 
