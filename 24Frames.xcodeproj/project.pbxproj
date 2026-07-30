@@ -18,6 +18,9 @@
 		100000000000000000000009 /* Views/ShutterRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000009 /* Views/ShutterRingView.swift */; };
 		100000000000000000000014 /* Views/CameraFlipButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000015 /* Views/CameraFlipButtonView.swift */; };
 		100000000000000000000015 /* Views/FlyToCornerAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000016 /* Views/FlyToCornerAnimationView.swift */; };
+		100000000000000000000016 /* Services/HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000017 /* Services/HapticManager.swift */; };
+		100000000000000000000017 /* Views/PhotoLibraryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000018 /* Views/PhotoLibraryPickerView.swift */; };
+		100000000000000000000018 /* Views/RecentPhotoThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000019 /* Views/RecentPhotoThumbnailView.swift */; };
 		100000000000000000000010 /* CameraManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000010 /* CameraManagerTests.swift */; };
 		100000000000000000000011 /* PhotoSaverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000011 /* PhotoSaverTests.swift */; };
 		100000000000000000000012 /* 24FramesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000012 /* 24FramesUITests.swift */; };
@@ -53,6 +56,9 @@
 		200000000000000000000009 /* Views/ShutterRingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/ShutterRingView.swift; sourceTree = "<group>"; };
 		200000000000000000000015 /* Views/CameraFlipButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/CameraFlipButtonView.swift; sourceTree = "<group>"; };
 		200000000000000000000016 /* Views/FlyToCornerAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/FlyToCornerAnimationView.swift; sourceTree = "<group>"; };
+		200000000000000000000017 /* Services/HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/HapticManager.swift; sourceTree = "<group>"; };
+		200000000000000000000018 /* Views/PhotoLibraryPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/PhotoLibraryPickerView.swift; sourceTree = "<group>"; };
+		200000000000000000000019 /* Views/RecentPhotoThumbnailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/RecentPhotoThumbnailView.swift; sourceTree = "<group>"; };
 		200000000000000000000010 /* CameraManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManagerTests.swift; sourceTree = "<group>"; };
 		200000000000000000000011 /* PhotoSaverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSaverTests.swift; sourceTree = "<group>"; };
 		200000000000000000000012 /* 24FramesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 24FramesUITests.swift; sourceTree = "<group>"; };
@@ -107,6 +113,7 @@
 				200000000000000000000002 /* Services/CameraManager.swift */,
 				200000000000000000000003 /* Services/PhotoLibraryProtocol.swift */,
 				200000000000000000000004 /* Services/PhotoSaver.swift */,
+				200000000000000000000017 /* Services/HapticManager.swift */,
 				200000000000000000000005 /* Views/CameraPreview.swift */,
 				200000000000000000000006 /* Views/ContentView.swift */,
 				200000000000000000000007 /* Views/PermissionDeniedView.swift */,
@@ -114,6 +121,8 @@
 				200000000000000000000009 /* Views/ShutterRingView.swift */,
 				200000000000000000000015 /* Views/CameraFlipButtonView.swift */,
 				200000000000000000000016 /* Views/FlyToCornerAnimationView.swift */,
+				200000000000000000000018 /* Views/PhotoLibraryPickerView.swift */,
+				200000000000000000000019 /* Views/RecentPhotoThumbnailView.swift */,
 			);
 			path = 24Frames;
 			sourceTree = "<group>";
@@ -258,6 +267,9 @@
 				100000000000000000000009 /* Views/ShutterRingView.swift in Sources */,
 				100000000000000000000014 /* Views/CameraFlipButtonView.swift in Sources */,
 				100000000000000000000015 /* Views/FlyToCornerAnimationView.swift in Sources */,
+				100000000000000000000016 /* Services/HapticManager.swift in Sources */,
+				100000000000000000000017 /* Views/PhotoLibraryPickerView.swift in Sources */,
+				100000000000000000000018 /* Views/RecentPhotoThumbnailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

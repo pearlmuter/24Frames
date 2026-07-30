@@ -16,6 +16,7 @@ public class CameraManager: NSObject, ObservableObject {
     @Published public var cameraPosition: AVCaptureDevice.Position = .back
     @Published public var lastCapturedPhotoData: Data? = nil
     @Published public var latestCapturedImage: UIImage? = nil
+    @Published public var lastSavedThumbnail: UIImage? = nil
     @Published public var errorMessage: String? = nil
     
     public let captureSession = AVCaptureSession()
@@ -110,6 +111,7 @@ public class CameraManager: NSObject, ObservableObject {
     }
     
     public func toggleCamera() {
+        HapticManager.impact(style: .light)
         cameraPosition = (cameraPosition == .back) ? .front : .back
         configureSession()
     }
@@ -135,6 +137,7 @@ public class CameraManager: NSObject, ObservableObject {
     }
     
     public func capturePhoto() {
+        HapticManager.impact(style: .medium)
         sessionQueue.async { [weak self] in
             guard let self = self else { return }
             
@@ -235,6 +238,7 @@ extension CameraManager: AVCapturePhotoCaptureDelegate {
             self.lastCapturedPhotoData = fileData
             if let image = UIImage(data: fileData) {
                 self.latestCapturedImage = image
+                self.lastSavedThumbnail = image
             }
         }
         

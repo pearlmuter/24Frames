@@ -3,6 +3,7 @@ import SwiftUI
 public struct ContentView: View {
     @StateObject private var cameraManager = CameraManager()
     @State private var isShutterRingAnimating = false
+    @State private var isShowingPhotoLibrary = false
     
     public init() {}
     
@@ -30,7 +31,7 @@ public struct ContentView: View {
                     
                     Spacer(minLength: 0)
                     
-                    // Bottom Controls Bar (raised higher to prevent accidental home gesture taps)
+                    // Bottom Controls Bar
                     ZStack {
                         ShutterRingView(isAnimating: $isShutterRingAnimating)
                         
@@ -45,6 +46,12 @@ public struct ContentView: View {
                         }
                         
                         HStack {
+                            RecentPhotoThumbnailView(image: cameraManager.lastSavedThumbnail) {
+                                HapticManager.selection()
+                                isShowingPhotoLibrary = true
+                            }
+                            .padding(.leading, 28)
+                            
                             Spacer()
                             
                             CameraFlipButtonView {
@@ -62,6 +69,9 @@ public struct ContentView: View {
                 ProgressView()
                     .progressViewStyle(CircularProgressViewStyle(tint: .white))
             }
+        }
+        .sheet(isPresented: $isShowingPhotoLibrary) {
+            PhotoLibraryPickerView()
         }
         .onAppear {
             cameraManager.onPhotoCaptured = {
