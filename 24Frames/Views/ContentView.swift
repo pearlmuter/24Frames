@@ -2,6 +2,7 @@ import SwiftUI
 
 public struct ContentView: View {
     @StateObject private var cameraManager = CameraManager()
+    @StateObject private var volumeObserver = VolumeButtonObserver()
     @State private var isShutterRingAnimating = false
     @State private var isShowingPhotoLibrary = false
     
@@ -10,6 +11,11 @@ public struct ContentView: View {
     public var body: some View {
         ZStack {
             Color.black.edgesIgnoringSafeArea(.all)
+            
+            // Hidden volume view to suppress system volume slider HUD
+            VolumeViewHidden()
+                .frame(width: 0, height: 0)
+                .opacity(0)
             
             switch cameraManager.permissionState {
             case .authorized:
@@ -76,6 +82,20 @@ public struct ContentView: View {
         .onAppear {
             cameraManager.onPhotoCaptured = {
                 triggerRingAnimation()
+            }
+            volumeObserver.onVolumeButtonTap = {
+                triggerShutter()
+            }
+            volumeObserver.startListening()
+        }
+        .onDisappear {
+            volumeObserver.stopListening()
+        }
+        .onOpenURL { url in
+            if url.host == "snap" || url.absoluteString.contains("snap") {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    triggerShutter()
+                }
             }
         }
     }
