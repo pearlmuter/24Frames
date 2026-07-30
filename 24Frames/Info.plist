@@ -16,6 +16,8 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIRequiresFullScreen</key>
+	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>24Frames requires camera access to capture Base Capture photos without AI processing.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
