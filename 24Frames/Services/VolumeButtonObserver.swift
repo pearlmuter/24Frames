@@ -1,16 +1,17 @@
 import UIKit
 import AVFoundation
 import MediaPlayer
-import Combine
 import SwiftUI
 
-public class VolumeButtonObserver: ObservableObject {
-    private var cancellable: AnyCancellable?
+public class VolumeButtonObserver: NSObject, ObservableObject {
     private var isListening = false
+    private var isKVOAdded = false
     
     public var onVolumeButtonTap: (() -> Void)?
     
-    public init() {}
+    public override init() {
+        super.init()
+    }
     
     public func startListening() {
         guard !isListening else { return }
@@ -18,23 +19,38 @@ public class VolumeButtonObserver: ObservableObject {
         
         let audioSession = AVAudioSession.sharedInstance()
         do {
-            try audioSession.setCategory(.ambient, options: .mixWithOthers)
+            try audioSession.setCategory(.playback, options: .mixWithOthers)
             try audioSession.setActive(true)
         } catch {
             print("Audio session configuration error: \(error)")
         }
         
-        cancellable = audioSession.publisher(for: \.outputVolume)
-            .dropFirst()
-            .sink { [weak self] _ in
-                guard let self = self, self.isListening else { return }
-                self.onVolumeButtonTap?()
-            }
+        if !isKVOAdded {
+            audioSession.addObserver(self, forKeyPath: "outputVolume", options: [.new, .old], context: nil)
+            isKVOAdded = true
+        }
     }
     
     public func stopListening() {
+        guard isListening else { return }
         isListening = false
-        cancellable?.cancel()
+        if isKVOAdded {
+            AVAudioSession.sharedInstance().removeObserver(self, forKeyPath: "outputVolume")
+            isKVOAdded = false
+        }
+    }
+    
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "outputVolume" {
+            guard isListening else { return }
+            DispatchQueue.main.async { [weak self] in
+                self?.onVolumeButtonTap?()
+            }
+        }
+    }
+    
+    deinit {
+        stopListening()
     }
 }
 
@@ -43,6 +59,7 @@ public struct VolumeViewHidden: UIViewRepresentable {
     public func makeUIView(context: Context) -> MPVolumeView {
         let volumeView = MPVolumeView(frame: CGRect(x: -100, y: -100, width: 1, height: 1))
         volumeView.alpha = 0.0001
+        volumeView.clipsToBounds = true
         return volumeView
     }
     public func updateUIView(_ uiView: MPVolumeView, context: Context) {}
