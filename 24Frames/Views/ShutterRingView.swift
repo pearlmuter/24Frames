@@ -16,7 +16,7 @@ public struct ShutterRingView: View {
                         .scaleEffect(isAnimating ? 3.5 : 0.2)
                         .opacity(isAnimating ? 0.0 : 0.9)
                         .animation(.easeOut(duration: 0.35), value: isAnimating)
-                        .position(x: geometry.size.width / 2, y: geometry.size.height - 90)
+                        .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
                 }
             }
         }

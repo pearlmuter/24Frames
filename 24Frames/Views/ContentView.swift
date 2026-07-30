@@ -21,8 +21,6 @@ public struct ContentView: View {
                             .aspectRatio(3.0 / 4.0, contentMode: .fit)
                             .clipped()
                         
-                        ShutterRingView(isAnimating: $isShutterRingAnimating)
-                        
                         if let capturedImage = cameraManager.latestCapturedImage {
                             FlyToCornerAnimationView(image: capturedImage) {
                                 cameraManager.latestCapturedImage = nil
@@ -32,8 +30,10 @@ public struct ContentView: View {
                     
                     Spacer(minLength: 0)
                     
-                    // Bottom Controls Bar
+                    // Bottom Controls Bar (raised higher to prevent accidental home gesture taps)
                     ZStack {
+                        ShutterRingView(isAnimating: $isShutterRingAnimating)
+                        
                         HStack {
                             Spacer()
                             
@@ -54,9 +54,8 @@ public struct ContentView: View {
                         }
                     }
                     .frame(height: 100)
-                    .padding(.bottom, 24)
+                    .padding(.bottom, 52)
                 }
-                .edgesIgnoringSafeArea(.bottom)
             case .denied:
                 PermissionDeniedView()
             case .notDetermined:
