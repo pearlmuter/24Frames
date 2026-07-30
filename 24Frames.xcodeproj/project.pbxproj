@@ -1,0 +1,474 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		100000000000000000000001 /* App24Frames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000001 /* App24Frames.swift */; };
+		100000000000000000000002 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000002 /* CameraManager.swift */; };
+		100000000000000000000003 /* PhotoLibraryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000003 /* PhotoLibraryProtocol.swift */; };
+		100000000000000000000004 /* PhotoSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000004 /* PhotoSaver.swift */; };
+		100000000000000000000005 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000005 /* CameraPreview.swift */; };
+		100000000000000000000006 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000006 /* ContentView.swift */; };
+		100000000000000000000007 /* PermissionDeniedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000007 /* PermissionDeniedView.swift */; };
+		100000000000000000000008 /* ShutterButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000008 /* ShutterButtonView.swift */; };
+		100000000000000000000009 /* ShutterRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000009 /* ShutterRingView.swift */; };
+		100000000000000000000010 /* CameraManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000010 /* CameraManagerTests.swift */; };
+		100000000000000000000011 /* PhotoSaverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000011 /* PhotoSaverTests.swift */; };
+		100000000000000000000012 /* 24FramesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000012 /* 24FramesUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		300000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 400000000000000000000001;
+			remoteInfo = 24Frames;
+		};
+		300000000000000000000002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 400000000000000000000001;
+			remoteInfo = 24Frames;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		500000000000000000000001 /* 24Frames.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 24Frames.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		500000000000000000000002 /* 24FramesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 24FramesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		500000000000000000000003 /* 24FramesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 24FramesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		200000000000000000000001 /* App24Frames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App24Frames.swift; sourceTree = "<group>"; };
+		200000000000000000000002 /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CameraManager.swift; sourceTree = "<group>"; };
+		200000000000000000000003 /* PhotoLibraryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PhotoLibraryProtocol.swift; sourceTree = "<group>"; };
+		200000000000000000000004 /* PhotoSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PhotoSaver.swift; sourceTree = "<group>"; };
+		200000000000000000000005 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/CameraPreview.swift; sourceTree = "<group>"; };
+		200000000000000000000006 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/ContentView.swift; sourceTree = "<group>"; };
+		200000000000000000000007 /* PermissionDeniedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/PermissionDeniedView.swift; sourceTree = "<group>"; };
+		200000000000000000000008 /* ShutterButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/ShutterButtonView.swift; sourceTree = "<group>"; };
+		200000000000000000000009 /* ShutterRingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/ShutterRingView.swift; sourceTree = "<group>"; };
+		200000000000000000000010 /* CameraManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManagerTests.swift; sourceTree = "<group>"; };
+		200000000000000000000011 /* PhotoSaverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSaverTests.swift; sourceTree = "<group>"; };
+		200000000000000000000012 /* 24FramesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 24FramesUITests.swift; sourceTree = "<group>"; };
+		200000000000000000000013 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		600000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		600000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		600000000000000000000003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		700000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				700000000000000000000002 /* 24Frames */,
+				700000000000000000000003 /* 24FramesTests */,
+				700000000000000000000004 /* 24FramesUITests */,
+				700000000000000000000005 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		700000000000000000000002 /* 24Frames */ = {
+			isa = PBXGroup;
+			children = (
+				200000000000000000000001 /* App24Frames.swift */,
+				200000000000000000000013 /* Info.plist */,
+				200000000000000000000002 /* CameraManager.swift */,
+				200000000000000000000003 /* PhotoLibraryProtocol.swift */,
+				200000000000000000000004 /* PhotoSaver.swift */,
+				200000000000000000000005 /* CameraPreview.swift */,
+				200000000000000000000006 /* ContentView.swift */,
+				200000000000000000000007 /* PermissionDeniedView.swift */,
+				200000000000000000000008 /* ShutterButtonView.swift */,
+				200000000000000000000009 /* ShutterRingView.swift */,
+			);
+			path = 24Frames;
+			sourceTree = "<group>";
+		};
+		700000000000000000000003 /* 24FramesTests */ = {
+			isa = PBXGroup;
+			children = (
+				200000000000000000000010 /* CameraManagerTests.swift */,
+				200000000000000000000011 /* PhotoSaverTests.swift */,
+			);
+			path = 24FramesTests;
+			sourceTree = "<group>";
+		};
+		700000000000000000000004 /* 24FramesUITests */ = {
+			isa = PBXGroup;
+			children = (
+				200000000000000000000012 /* 24FramesUITests.swift */,
+			);
+			path = 24FramesUITests;
+			sourceTree = "<group>";
+		};
+		700000000000000000000005 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				500000000000000000000001 /* 24Frames.app */,
+				500000000000000000000002 /* 24FramesTests.xctest */,
+				500000000000000000000003 /* 24FramesUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		400000000000000000000001 /* 24Frames */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 900000000000000000000001 /* Build configuration list for PBXNativeTarget "24Frames" */;
+			buildPhases = (
+				800000000000000000000001 /* Sources */,
+				600000000000000000000001 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = 24Frames;
+			productName = 24Frames;
+			productReference = 500000000000000000000001 /* 24Frames.app */;
+			productType = "com.apple.product-type.application";
+		};
+		400000000000000000000002 /* 24FramesTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 900000000000000000000002 /* Build configuration list for PBXNativeTarget "24FramesTests" */;
+			buildPhases = (
+				800000000000000000000002 /* Sources */,
+				600000000000000000000002 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B000000000000000000000001 /* PBXTargetDependency */,
+			);
+			name = 24FramesTests;
+			productName = 24FramesTests;
+			productReference = 500000000000000000000002 /* 24FramesTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		400000000000000000000003 /* 24FramesUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 900000000000000000000003 /* Build configuration list for PBXNativeTarget "24FramesUITests" */;
+			buildPhases = (
+				800000000000000000000003 /* Sources */,
+				600000000000000000000003 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B000000000000000000000002 /* PBXTargetDependency */,
+			);
+			name = 24FramesUITests;
+			productName = 24FramesUITests;
+			productReference = 500000000000000000000003 /* 24FramesUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		000000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1300;
+				LastUpgradeCheck = 1300;
+
+				TargetAttributes = {
+					400000000000000000000001 = {
+						CreatedOnToolsVersion = 13.0;
+					};
+					400000000000000000000002 = {
+						CreatedOnToolsVersion = 13.0;
+						TestTargetID = 400000000000000000000001;
+					};
+					400000000000000000000003 = {
+						CreatedOnToolsVersion = 13.0;
+						TestTargetID = 400000000000000000000001;
+					};
+				};
+			};
+			buildConfigurationList = 900000000000000000000000 /* Build configuration list for PBXProject "24Frames" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 700000000000000000000001;
+			productRefGroup = 700000000000000000000005 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				400000000000000000000001 /* 24Frames */,
+				400000000000000000000002 /* 24FramesTests */,
+				400000000000000000000003 /* 24FramesUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		800000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				100000000000000000000001 /* App24Frames.swift in Sources */,
+				100000000000000000000002 /* CameraManager.swift in Sources */,
+				100000000000000000000003 /* PhotoLibraryProtocol.swift in Sources */,
+				100000000000000000000004 /* PhotoSaver.swift in Sources */,
+				100000000000000000000005 /* CameraPreview.swift in Sources */,
+				100000000000000000000006 /* ContentView.swift in Sources */,
+				100000000000000000000007 /* PermissionDeniedView.swift in Sources */,
+				100000000000000000000008 /* ShutterButtonView.swift in Sources */,
+				100000000000000000000009 /* ShutterRingView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		800000000000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				100000000000000000000010 /* CameraManagerTests.swift in Sources */,
+				100000000000000000000011 /* PhotoSaverTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		800000000000000000000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				100000000000000000000012 /* 24FramesUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B000000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 400000000000000000000001 /* 24Frames */;
+			targetProxy = 300000000000000000000001 /* PBXContainerItemProxy */;
+		};
+		B000000000000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 400000000000000000000001 /* 24Frames */;
+			targetProxy = 300000000000000000000002 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A000000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = 24Frames/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pearlmuter.24Frames;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A000000000000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_TESTABILITY = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = 24Frames/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pearlmuter.24Frames;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A000000000000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/24Frames.app/24Frames";
+			};
+			name = Debug;
+		};
+		A000000000000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/24Frames.app/24Frames";
+			};
+			name = Release;
+		};
+		A000000000000000000000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = 24Frames;
+			};
+			name = Debug;
+		};
+		A000000000000000000000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = 24Frames;
+			};
+			name = Release;
+		};
+		A000000000000000000000007 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A000000000000000000000008 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		900000000000000000000000 /* Build configuration list for PBXProject "24Frames" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A000000000000000000000007 /* Debug */,
+				A000000000000000000000008 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		900000000000000000000001 /* Build configuration list for PBXNativeTarget "24Frames" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A000000000000000000000001 /* Debug */,
+				A000000000000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		900000000000000000000002 /* Build configuration list for PBXNativeTarget "24FramesTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A000000000000000000000003 /* Debug */,
+				A000000000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		900000000000000000000003 /* Build configuration list for PBXNativeTarget "24FramesUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A000000000000000000000005 /* Debug */,
+				A000000000000000000000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 000000000000000000000001 /* Project object */;
+}
