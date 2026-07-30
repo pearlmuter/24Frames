@@ -8,17 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		100000000000000000000001 /* App24Frames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000001 /* App24Frames.swift */; };
-		100000000000000000000002 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000002 /* CameraManager.swift */; };
-		100000000000000000000003 /* PhotoLibraryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000003 /* PhotoLibraryProtocol.swift */; };
-		100000000000000000000004 /* PhotoSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000004 /* PhotoSaver.swift */; };
-		100000000000000000000005 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000005 /* CameraPreview.swift */; };
-		100000000000000000000006 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000006 /* ContentView.swift */; };
-		100000000000000000000007 /* PermissionDeniedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000007 /* PermissionDeniedView.swift */; };
-		100000000000000000000008 /* ShutterButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000008 /* ShutterButtonView.swift */; };
-		100000000000000000000009 /* ShutterRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000009 /* ShutterRingView.swift */; };
+		100000000000000000000002 /* Services/CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000002 /* Services/CameraManager.swift */; };
+		100000000000000000000003 /* Services/PhotoLibraryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000003 /* Services/PhotoLibraryProtocol.swift */; };
+		100000000000000000000004 /* Services/PhotoSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000004 /* Services/PhotoSaver.swift */; };
+		100000000000000000000005 /* Views/CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000005 /* Views/CameraPreview.swift */; };
+		100000000000000000000006 /* Views/ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000006 /* Views/ContentView.swift */; };
+		100000000000000000000007 /* Views/PermissionDeniedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000007 /* Views/PermissionDeniedView.swift */; };
+		100000000000000000000008 /* Views/ShutterButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000008 /* Views/ShutterButtonView.swift */; };
+		100000000000000000000009 /* Views/ShutterRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000009 /* Views/ShutterRingView.swift */; };
 		100000000000000000000010 /* CameraManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000010 /* CameraManagerTests.swift */; };
 		100000000000000000000011 /* PhotoSaverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000011 /* PhotoSaverTests.swift */; };
 		100000000000000000000012 /* 24FramesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000012 /* 24FramesUITests.swift */; };
+		100000000000000000000013 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000014 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,22 +40,23 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		500000000000000000000001 /* 24Frames.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 24Frames.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		500000000000000000000002 /* 24FramesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 24FramesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		500000000000000000000003 /* 24FramesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 24FramesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		200000000000000000000001 /* App24Frames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App24Frames.swift; sourceTree = "<group>"; };
-		200000000000000000000002 /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CameraManager.swift; sourceTree = "<group>"; };
-		200000000000000000000003 /* PhotoLibraryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PhotoLibraryProtocol.swift; sourceTree = "<group>"; };
-		200000000000000000000004 /* PhotoSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PhotoSaver.swift; sourceTree = "<group>"; };
-		200000000000000000000005 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/CameraPreview.swift; sourceTree = "<group>"; };
-		200000000000000000000006 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/ContentView.swift; sourceTree = "<group>"; };
-		200000000000000000000007 /* PermissionDeniedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/PermissionDeniedView.swift; sourceTree = "<group>"; };
-		200000000000000000000008 /* ShutterButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/ShutterButtonView.swift; sourceTree = "<group>"; };
-		200000000000000000000009 /* ShutterRingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/ShutterRingView.swift; sourceTree = "<group>"; };
+		200000000000000000000002 /* Services/CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CameraManager.swift; sourceTree = "<group>"; };
+		200000000000000000000003 /* Services/PhotoLibraryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PhotoLibraryProtocol.swift; sourceTree = "<group>"; };
+		200000000000000000000004 /* Services/PhotoSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/PhotoSaver.swift; sourceTree = "<group>"; };
+		200000000000000000000005 /* Views/CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/CameraPreview.swift; sourceTree = "<group>"; };
+		200000000000000000000006 /* Views/ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/ContentView.swift; sourceTree = "<group>"; };
+		200000000000000000000007 /* Views/PermissionDeniedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/PermissionDeniedView.swift; sourceTree = "<group>"; };
+		200000000000000000000008 /* Views/ShutterButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/ShutterButtonView.swift; sourceTree = "<group>"; };
+		200000000000000000000009 /* Views/ShutterRingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/ShutterRingView.swift; sourceTree = "<group>"; };
 		200000000000000000000010 /* CameraManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManagerTests.swift; sourceTree = "<group>"; };
 		200000000000000000000011 /* PhotoSaverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSaverTests.swift; sourceTree = "<group>"; };
 		200000000000000000000012 /* 24FramesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 24FramesUITests.swift; sourceTree = "<group>"; };
 		200000000000000000000013 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		200000000000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		500000000000000000000001 /* 24Frames.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 24Frames.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		500000000000000000000002 /* 24FramesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 24FramesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		500000000000000000000003 /* 24FramesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 24FramesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,14 +99,15 @@
 			children = (
 				200000000000000000000001 /* App24Frames.swift */,
 				200000000000000000000013 /* Info.plist */,
-				200000000000000000000002 /* CameraManager.swift */,
-				200000000000000000000003 /* PhotoLibraryProtocol.swift */,
-				200000000000000000000004 /* PhotoSaver.swift */,
-				200000000000000000000005 /* CameraPreview.swift */,
-				200000000000000000000006 /* ContentView.swift */,
-				200000000000000000000007 /* PermissionDeniedView.swift */,
-				200000000000000000000008 /* ShutterButtonView.swift */,
-				200000000000000000000009 /* ShutterRingView.swift */,
+				200000000000000000000014 /* Assets.xcassets */,
+				200000000000000000000002 /* Services/CameraManager.swift */,
+				200000000000000000000003 /* Services/PhotoLibraryProtocol.swift */,
+				200000000000000000000004 /* Services/PhotoSaver.swift */,
+				200000000000000000000005 /* Views/CameraPreview.swift */,
+				200000000000000000000006 /* Views/ContentView.swift */,
+				200000000000000000000007 /* Views/PermissionDeniedView.swift */,
+				200000000000000000000008 /* Views/ShutterButtonView.swift */,
+				200000000000000000000009 /* Views/ShutterRingView.swift */,
 			);
 			path = 24Frames;
 			sourceTree = "<group>";
@@ -145,6 +148,7 @@
 			buildPhases = (
 				800000000000000000000001 /* Sources */,
 				600000000000000000000001 /* Frameworks */,
+				800000000000000000000004 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -198,7 +202,6 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1300;
 				LastUpgradeCheck = 1300;
-
 				TargetAttributes = {
 					400000000000000000000001 = {
 						CreatedOnToolsVersion = 13.0;
@@ -239,14 +242,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				100000000000000000000001 /* App24Frames.swift in Sources */,
-				100000000000000000000002 /* CameraManager.swift in Sources */,
-				100000000000000000000003 /* PhotoLibraryProtocol.swift in Sources */,
-				100000000000000000000004 /* PhotoSaver.swift in Sources */,
-				100000000000000000000005 /* CameraPreview.swift in Sources */,
-				100000000000000000000006 /* ContentView.swift in Sources */,
-				100000000000000000000007 /* PermissionDeniedView.swift in Sources */,
-				100000000000000000000008 /* ShutterButtonView.swift in Sources */,
-				100000000000000000000009 /* ShutterRingView.swift in Sources */,
+				100000000000000000000002 /* Services/CameraManager.swift in Sources */,
+				100000000000000000000003 /* Services/PhotoLibraryProtocol.swift in Sources */,
+				100000000000000000000004 /* Services/PhotoSaver.swift in Sources */,
+				100000000000000000000005 /* Views/CameraPreview.swift in Sources */,
+				100000000000000000000006 /* Views/ContentView.swift in Sources */,
+				100000000000000000000007 /* Views/PermissionDeniedView.swift in Sources */,
+				100000000000000000000008 /* Views/ShutterButtonView.swift in Sources */,
+				100000000000000000000009 /* Views/ShutterRingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,6 +272,17 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXResourcesBuildPhase section */
+		800000000000000000000004 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				100000000000000000000013 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXTargetDependency section */
 		B000000000000000000000001 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -287,9 +301,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3FY4D2C459;
 				ENABLE_TESTABILITY = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = 24Frames/Info.plist;
@@ -311,9 +327,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3FY4D2C459;
 				ENABLE_TESTABILITY = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = 24Frames/Info.plist;
