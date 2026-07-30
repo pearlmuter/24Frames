@@ -174,7 +174,7 @@ public class CameraManager: NSObject, ObservableObject {
                 
                 if connection.isVideoMirroringSupported {
                     connection.automaticallyAdjustsVideoMirroring = false
-                    connection.isVideoMirrored = false
+                    connection.isVideoMirrored = (self.cameraPosition == .front)
                 }
             }
             

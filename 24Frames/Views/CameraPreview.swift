@@ -32,6 +32,10 @@ public struct CameraPreview: UIViewRepresentable {
     
     public func updateUIView(_ uiView: VideoPreviewView, context: Context) {
         uiView.videoPreviewLayer.session = cameraManager.captureSession
+        if let connection = uiView.videoPreviewLayer.connection, connection.isVideoMirroringSupported {
+            connection.automaticallyAdjustsVideoMirroring = false
+            connection.isVideoMirrored = (cameraManager.cameraPosition == .front)
+        }
     }
     
     public func makeCoordinator() -> Coordinator {
