@@ -152,23 +152,30 @@ public class CameraManager: NSObject, ObservableObject {
                 photoSettings.isAutoRedEyeReductionEnabled = false
             }
             
-            // Dynamic landscape / portrait video orientation handling
-            if let connection = self.photoOutput.connection(with: .video), connection.isVideoOrientationSupported {
-                let deviceOrientation = UIDevice.current.orientation
-                let videoOrientation: AVCaptureVideoOrientation
-                switch deviceOrientation {
-                case .portrait:
-                    videoOrientation = .portrait
-                case .portraitUpsideDown:
-                    videoOrientation = .portraitUpsideDown
-                case .landscapeLeft:
-                    videoOrientation = .landscapeRight
-                case .landscapeRight:
-                    videoOrientation = .landscapeLeft
-                default:
-                    videoOrientation = .portrait
+            // Dynamic landscape / portrait video orientation handling and un-mirrored photo output
+            if let connection = self.photoOutput.connection(with: .video) {
+                if connection.isVideoOrientationSupported {
+                    let deviceOrientation = UIDevice.current.orientation
+                    let videoOrientation: AVCaptureVideoOrientation
+                    switch deviceOrientation {
+                    case .portrait:
+                        videoOrientation = .portrait
+                    case .portraitUpsideDown:
+                        videoOrientation = .portraitUpsideDown
+                    case .landscapeLeft:
+                        videoOrientation = .landscapeRight
+                    case .landscapeRight:
+                        videoOrientation = .landscapeLeft
+                    default:
+                        videoOrientation = .portrait
+                    }
+                    connection.videoOrientation = videoOrientation
                 }
-                connection.videoOrientation = videoOrientation
+                
+                if connection.isVideoMirroringSupported {
+                    connection.automaticallyAdjustsVideoMirroring = false
+                    connection.isVideoMirrored = false
+                }
             }
             
             DispatchQueue.main.async {
