@@ -6,8 +6,20 @@ final class CameraManagerTests: XCTestCase {
     func testCameraManagerInitializationDefaults() {
         let manager = CameraManager()
         XCTAssertNotNil(manager.captureSession)
+        XCTAssertEqual(manager.cameraPosition, .back)
         XCTAssertFalse(manager.isCapturing)
         XCTAssertNil(manager.errorMessage)
+    }
+    
+    func testCameraTogglePositionSwitching() {
+        let manager = CameraManager()
+        XCTAssertEqual(manager.cameraPosition, .back)
+        
+        manager.toggleCamera()
+        XCTAssertEqual(manager.cameraPosition, .front)
+        
+        manager.toggleCamera()
+        XCTAssertEqual(manager.cameraPosition, .back)
     }
     
     func testCameraManagerLensSelectionConstraint() {

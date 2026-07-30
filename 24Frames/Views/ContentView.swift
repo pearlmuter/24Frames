@@ -12,22 +12,45 @@ public struct ContentView: View {
             
             switch cameraManager.permissionState {
             case .authorized:
-                ZStack {
-                    CameraPreview(cameraManager: cameraManager)
-                        .edgesIgnoringSafeArea(.all)
+                VStack(spacing: 0) {
+                    Spacer(minLength: 0)
                     
-                    ShutterRingView(isAnimating: $isShutterRingAnimating)
-                        .edgesIgnoringSafeArea(.all)
-                    
-                    VStack {
-                        Spacer()
+                    // 4:3 Aspect Ratio Camera View Finder with black letterboxing
+                    ZStack {
+                        CameraPreview(cameraManager: cameraManager)
+                            .aspectRatio(3.0 / 4.0, contentMode: .fit)
+                            .clipped()
                         
-                        ShutterButtonView {
-                            triggerShutter()
-                        }
-                        .padding(.bottom, 36)
+                        ShutterRingView(isAnimating: $isShutterRingAnimating)
                     }
+                    
+                    Spacer(minLength: 0)
+                    
+                    // Bottom Controls Bar
+                    ZStack {
+                        HStack {
+                            Spacer()
+                            
+                            ShutterButtonView {
+                                triggerShutter()
+                            }
+                            
+                            Spacer()
+                        }
+                        
+                        HStack {
+                            Spacer()
+                            
+                            CameraFlipButtonView {
+                                cameraManager.toggleCamera()
+                            }
+                            .padding(.trailing, 28)
+                        }
+                    }
+                    .frame(height: 100)
+                    .padding(.bottom, 24)
                 }
+                .edgesIgnoringSafeArea(.bottom)
             case .denied:
                 PermissionDeniedView()
             case .notDetermined:

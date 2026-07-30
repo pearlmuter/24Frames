@@ -13,6 +13,7 @@ public class CameraManager: NSObject, ObservableObject {
     @Published public var permissionState: CameraPermissionState = .notDetermined
     @Published public var isSessionRunning: Bool = false
     @Published public var isCapturing: Bool = false
+    @Published public var cameraPosition: AVCaptureDevice.Position = .back
     @Published public var lastCapturedPhotoData: Data? = nil
     @Published public var errorMessage: String? = nil
     
@@ -63,10 +64,15 @@ public class CameraManager: NSObject, ObservableObject {
             self.captureSession.beginConfiguration()
             self.captureSession.sessionPreset = .photo
             
-            // Strictly lock lens to Primary Wide (.builtInWideAngleCamera)
-            guard let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else {
+            // Remove existing input if any
+            if let currentInput = self.videoDeviceInput {
+                self.captureSession.removeInput(currentInput)
+            }
+            
+            // Strictly lock lens to Primary Wide (.builtInWideAngleCamera) for specified position
+            guard let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: self.cameraPosition) else {
                 DispatchQueue.main.async {
-                    self.errorMessage = "Primary Wide camera is unavailable."
+                    self.errorMessage = "Primary Wide camera is unavailable for position: \(self.cameraPosition.rawValue)."
                 }
                 self.captureSession.commitConfiguration()
                 return
@@ -102,6 +108,11 @@ public class CameraManager: NSObject, ObservableObject {
         }
     }
     
+    public func toggleCamera() {
+        cameraPosition = (cameraPosition == .back) ? .front : .back
+        configureSession()
+    }
+    
     public func startSession() {
         sessionQueue.async { [weak self] in
             guard let self = self, !self.captureSession.isRunning else { return }
@@ -135,6 +146,25 @@ public class CameraManager: NSObject, ObservableObject {
             // Explicitly disable AI computational options to guarantee Base Capture
             if self.photoOutput.isAutoRedEyeReductionSupported {
                 photoSettings.isAutoRedEyeReductionEnabled = false
+            }
+            
+            // Dynamic landscape / portrait video orientation handling
+            if let connection = self.photoOutput.connection(with: .video), connection.isVideoOrientationSupported {
+                let deviceOrientation = UIDevice.current.orientation
+                let videoOrientation: AVCaptureVideoOrientation
+                switch deviceOrientation {
+                case .portrait:
+                    videoOrientation = .portrait
+                case .portraitUpsideDown:
+                    videoOrientation = .portraitUpsideDown
+                case .landscapeLeft:
+                    videoOrientation = .landscapeRight
+                case .landscapeRight:
+                    videoOrientation = .landscapeLeft
+                default:
+                    videoOrientation = .portrait
+                }
+                connection.videoOrientation = videoOrientation
             }
             
             DispatchQueue.main.async {
