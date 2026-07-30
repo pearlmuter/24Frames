@@ -23,6 +23,8 @@
 		100000000000000000000018 /* Views/RecentPhotoThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000019 /* Views/RecentPhotoThumbnailView.swift */; };
 		100000000000000000000019 /* Services/VolumeButtonObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000020 /* Services/VolumeButtonObserver.swift */; };
 		100000000000000000000020 /* Services/CameraControlIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000021 /* Services/CameraControlIntent.swift */; };
+		100000000000000000000021 /* TwentyFourFramesWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000022 /* TwentyFourFramesWidget.swift */; };
+		100000000000000000000022 /* 24FramesWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 500000000000000000000004 /* 24FramesWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		100000000000000000000010 /* CameraManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000010 /* CameraManagerTests.swift */; };
 		100000000000000000000011 /* PhotoSaverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000011 /* PhotoSaverTests.swift */; };
 		100000000000000000000012 /* 24FramesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000012 /* 24FramesUITests.swift */; };
@@ -44,7 +46,28 @@
 			remoteGlobalIDString = 400000000000000000000001;
 			remoteInfo = 24Frames;
 		};
+		300000000000000000000003 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 000000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 400000000000000000000004;
+			remoteInfo = 24FramesWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C00000000000000000000001 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				100000000000000000000022 /* 24FramesWidgetExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		200000000000000000000001 /* App24Frames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App24Frames.swift; sourceTree = "<group>"; };
@@ -63,6 +86,8 @@
 		200000000000000000000019 /* Views/RecentPhotoThumbnailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/RecentPhotoThumbnailView.swift; sourceTree = "<group>"; };
 		200000000000000000000020 /* Services/VolumeButtonObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/VolumeButtonObserver.swift; sourceTree = "<group>"; };
 		200000000000000000000021 /* Services/CameraControlIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CameraControlIntent.swift; sourceTree = "<group>"; };
+		200000000000000000000022 /* TwentyFourFramesWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwentyFourFramesWidget.swift; sourceTree = "<group>"; };
+		200000000000000000000023 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		200000000000000000000010 /* CameraManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManagerTests.swift; sourceTree = "<group>"; };
 		200000000000000000000011 /* PhotoSaverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSaverTests.swift; sourceTree = "<group>"; };
 		200000000000000000000012 /* 24FramesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 24FramesUITests.swift; sourceTree = "<group>"; };
@@ -71,6 +96,7 @@
 		500000000000000000000001 /* 24Frames.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 24Frames.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		500000000000000000000002 /* 24FramesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 24FramesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		500000000000000000000003 /* 24FramesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 24FramesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		500000000000000000000004 /* 24FramesWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = 24FramesWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +121,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		600000000000000000000004 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -102,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				700000000000000000000002 /* 24Frames */,
+				700000000000000000000006 /* 24FramesWidget */,
 				700000000000000000000003 /* 24FramesTests */,
 				700000000000000000000004 /* 24FramesUITests */,
 				700000000000000000000005 /* Products */,
@@ -133,6 +167,15 @@
 			path = 24Frames;
 			sourceTree = "<group>";
 		};
+		700000000000000000000006 /* 24FramesWidget */ = {
+			isa = PBXGroup;
+			children = (
+				200000000000000000000022 /* TwentyFourFramesWidget.swift */,
+				200000000000000000000023 /* Info.plist */,
+			);
+			path = 24FramesWidget;
+			sourceTree = "<group>";
+		};
 		700000000000000000000003 /* 24FramesTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -154,6 +197,7 @@
 			isa = PBXGroup;
 			children = (
 				500000000000000000000001 /* 24Frames.app */,
+				500000000000000000000004 /* 24FramesWidgetExtension.appex */,
 				500000000000000000000002 /* 24FramesTests.xctest */,
 				500000000000000000000003 /* 24FramesUITests.xctest */,
 			);
@@ -170,15 +214,33 @@
 				800000000000000000000001 /* Sources */,
 				600000000000000000000001 /* Frameworks */,
 				800000000000000000000004 /* Resources */,
+				C00000000000000000000001 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B000000000000000000000003 /* PBXTargetDependency */,
 			);
 			name = 24Frames;
 			productName = 24Frames;
 			productReference = 500000000000000000000001 /* 24Frames.app */;
 			productType = "com.apple.product-type.application";
+		};
+		400000000000000000000004 /* 24FramesWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 900000000000000000000004 /* Build configuration list for PBXNativeTarget "24FramesWidgetExtension" */;
+			buildPhases = (
+				800000000000000000000005 /* Sources */,
+				600000000000000000000004 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = 24FramesWidgetExtension;
+			productName = 24FramesWidgetExtension;
+			productReference = 500000000000000000000004 /* 24FramesWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		400000000000000000000002 /* 24FramesTests */ = {
 			isa = PBXNativeTarget;
@@ -253,6 +315,7 @@
 				400000000000000000000001 /* 24Frames */,
 				400000000000000000000002 /* 24FramesTests */,
 				400000000000000000000003 /* 24FramesUITests */,
+				400000000000000000000004 /* 24FramesWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -298,6 +361,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		800000000000000000000005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				100000000000000000000021 /* 24FramesWidget/TwentyFourFramesWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -321,6 +392,11 @@
 			isa = PBXTargetDependency;
 			target = 400000000000000000000001 /* 24Frames */;
 			targetProxy = 300000000000000000000002 /* PBXContainerItemProxy */;
+		};
+		B000000000000000000000003 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 400000000000000000000004 /* 24FramesWidgetExtension */;
+			targetProxy = 300000000000000000000003 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -457,6 +533,40 @@
 			};
 			name = Release;
 		};
+		A000000000000000000000009 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3FY4D2C459;
+				INFOPLIST_FILE = "24FramesWidget/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pearlmuter.24Frames.24FramesWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A000000000000000000000010 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3FY4D2C459;
+				INFOPLIST_FILE = "24FramesWidget/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pearlmuter.24Frames.24FramesWidgetExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -492,6 +602,15 @@
 			buildConfigurations = (
 				A000000000000000000000005 /* Debug */,
 				A000000000000000000000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		900000000000000000000004 /* Build configuration list for PBXNativeTarget "24FramesWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A000000000000000000000009 /* Debug */,
+				A000000000000000000000010 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
