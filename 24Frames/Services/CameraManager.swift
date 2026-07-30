@@ -15,6 +15,7 @@ public class CameraManager: NSObject, ObservableObject {
     @Published public var isCapturing: Bool = false
     @Published public var cameraPosition: AVCaptureDevice.Position = .back
     @Published public var lastCapturedPhotoData: Data? = nil
+    @Published public var latestCapturedImage: UIImage? = nil
     @Published public var errorMessage: String? = nil
     
     public let captureSession = AVCaptureSession()
@@ -232,6 +233,9 @@ extension CameraManager: AVCapturePhotoCaptureDelegate {
         
         DispatchQueue.main.async {
             self.lastCapturedPhotoData = fileData
+            if let image = UIImage(data: fileData) {
+                self.latestCapturedImage = image
+            }
         }
         
         photoSaver.savePhotoData(fileData) { [weak self] result in

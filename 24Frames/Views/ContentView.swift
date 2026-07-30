@@ -22,6 +22,12 @@ public struct ContentView: View {
                             .clipped()
                         
                         ShutterRingView(isAnimating: $isShutterRingAnimating)
+                        
+                        if let capturedImage = cameraManager.latestCapturedImage {
+                            FlyToCornerAnimationView(image: capturedImage) {
+                                cameraManager.latestCapturedImage = nil
+                            }
+                        }
                     }
                     
                     Spacer(minLength: 0)
