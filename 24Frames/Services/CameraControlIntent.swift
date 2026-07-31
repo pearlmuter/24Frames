@@ -9,7 +9,6 @@ public struct CapturePhotoIntent: AppIntent {
     
     public init() {}
     
-    @MainActor
     public func perform() async throws -> some IntentResult {
         if #available(iOS 18.0, *) {
             return .result(opensIntent: OpenURLIntent(URL(string: "twentyfourframes://snap")!))
