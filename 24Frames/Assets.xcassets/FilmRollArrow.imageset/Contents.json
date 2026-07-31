@@ -1,0 +1,13 @@
+{
+  "images" : [
+    {
+      "filename" : "film_roll_arrow.jpg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

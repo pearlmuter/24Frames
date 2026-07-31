@@ -25,22 +25,34 @@ public struct ContentView: View {
             switch cameraManager.permissionState {
             case .authorized:
                 VStack(spacing: 0) {
-                    // Top Bar Overlay with Countdown Display
+                    // Top Header Bar with Countdown & Optional Film Roll Icon
                     HStack {
                         Spacer()
                         
                         Text(settings.isInfinitePicturesMode ? "∞" : "\(settings.remainingPhotosToday)")
-                            .font(.system(size: 48, weight: .black, design: .monospaced))
+                            .font(.system(size: 52, weight: .black, design: .monospaced))
                             .foregroundColor(.white)
                         
                         Spacer()
                     }
-                    .padding(.top, 8)
-                    .padding(.bottom, 4)
+                    .overlay(
+                        HStack {
+                            Spacer()
+                            if settings.isDevelopModeEnabled {
+                                FilmRollButtonView(rollCount: filmManager.activeRollPhotoCount) {
+                                    HapticManager.medium()
+                                    let count = filmManager.activeRollPhotoCount
+                                    developAlertMessage = "Are you sure? You took \(count) pictures. You can only get one roll of pictures for today."
+                                    isShowingDevelopAlert = true
+                                }
+                                .padding(.trailing, 20)
+                            }
+                        }
+                    )
+                    .padding(.top, 4)
+                    .padding(.bottom, 8)
                     
-                    Spacer(minLength: 0)
-                    
-                    // 4:3 Aspect Ratio Camera View Finder
+                    // 4:3 Aspect Ratio Camera View Finder (Full Width, Maximized Height)
                     ZStack {
                         CameraPreview(cameraManager: cameraManager)
                             .grayscale(settings.isBlackAndWhiteMode ? 1.0 : 0.0)
@@ -54,32 +66,9 @@ public struct ContentView: View {
                         }
                     }
                     
-                    Spacer(minLength: 0)
+                    Spacer()
                     
-                    // Optional Develop Mode action button
-                    if settings.isDevelopModeEnabled {
-                        Button(action: {
-                            HapticManager.medium()
-                            let count = filmManager.activeRollPhotoCount
-                            developAlertMessage = "Are you sure? You took \(count) pictures. You can only get one roll of pictures for today."
-                            isShowingDevelopAlert = true
-                        }) {
-                            HStack(spacing: 8) {
-                                Image(systemName: "shippingbox.fill")
-                                    .font(.system(size: 14, weight: .bold))
-                                Text("Send to develop (\(filmManager.activeRollPhotoCount))")
-                                    .font(.system(size: 14, weight: .bold))
-                            }
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 10)
-                            .background(Color.red)
-                            .cornerRadius(20)
-                        }
-                        .padding(.bottom, 16)
-                    }
-                    
-                    // Bottom Controls Bar (Positioned comfortably near bottom safe area)
+                    // Bottom Controls Bar (Lowered to bottom of screen)
                     ZStack {
                         ShutterRingView(isAnimating: $isShutterRingAnimating)
                         
@@ -110,7 +99,7 @@ public struct ContentView: View {
                             .padding(.trailing, 28)
                         }
                     }
-                    .padding(.bottom, 24)
+                    .padding(.bottom, 12)
                 }
             case .denied:
                 PermissionDeniedView()
