@@ -20,8 +20,8 @@ public struct ContentView: View {
     @StateObject private var cameraManager = CameraManager()
     @StateObject private var volumeObserver = VolumeButtonObserver()
     @StateObject private var orientationObserver = OrientationObserver()
-    @StateObject private var settings = AppSettings.shared
-    @StateObject private var filmManager = FilmDevelopManager.shared
+    @ObservedObject private var settings = AppSettings.shared
+    @ObservedObject private var filmManager = FilmDevelopManager.shared
     
     @State private var isShutterRingAnimating = false
     @State private var isShowingPhotoLibrary = false
