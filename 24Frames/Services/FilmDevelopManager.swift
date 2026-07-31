@@ -59,6 +59,13 @@ public class FilmDevelopManager: ObservableObject {
     }
     
     public func updateNextDevelopCountdown() {
+        if AppSettings.shared.developmentSpeed == .immediate {
+            DispatchQueue.main.async {
+                self.nextDevelopCountdownString = nil
+            }
+            return
+        }
+        
         let contents = (try? fileManager.contentsOfDirectory(atPath: pendingDirectory.path)) ?? []
         let now = Date()
         var earliestTargetDate: Date? = nil
@@ -196,6 +203,7 @@ public class FilmDevelopManager: ObservableObject {
     public func checkAndProcessScheduledDevelopments(photoSaver: PhotoSaver) {
         let contents = (try? fileManager.contentsOfDirectory(atPath: pendingDirectory.path)) ?? []
         let now = Date()
+        let isImmediate = (AppSettings.shared.developmentSpeed == .immediate)
         
         for dirName in contents {
             if dirName == "ActiveRoll" { continue }
@@ -206,7 +214,7 @@ public class FilmDevelopManager: ObservableObject {
                 continue
             }
             
-            if manifest.targetDevelopDate <= now {
+            if isImmediate || manifest.targetDevelopDate <= now {
                 exportPhotosToLibrary(manifest.fileNames, from: rollDir, photoSaver: photoSaver)
                 try? fileManager.removeItem(at: rollDir)
             }

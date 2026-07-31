@@ -28,9 +28,11 @@ public class AppSettings: ObservableObject {
     
     private var observer: AnyCancellable?
     private var previousDevelopState: Bool = false
+    private var previousSpeedState: String = DevelopmentSpeed.immediate.rawValue
     
     public init() {
         previousDevelopState = isDevelopModeEnabled
+        previousSpeedState = developmentSpeedRaw
         checkDailyReset()
         setupUserDefaultsObserver()
     }
@@ -48,6 +50,12 @@ public class AppSettings: ObservableObject {
                     FilmDevelopManager.shared.flushAllPendingAndActiveRollsToCameraRoll(photoSaver: PhotoSaver())
                 }
                 self.previousDevelopState = currentDevelopState
+                
+                let currentSpeed = self.developmentSpeedRaw
+                if self.developmentSpeed == .immediate {
+                    FilmDevelopManager.shared.checkAndProcessScheduledDevelopments(photoSaver: PhotoSaver())
+                }
+                self.previousSpeedState = currentSpeed
             }
     }
     
