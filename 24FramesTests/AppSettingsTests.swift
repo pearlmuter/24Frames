@@ -44,6 +44,6 @@ final class AppSettingsTests: XCTestCase {
         settings.photosTakenToday = 24
         settings.isInfinitePicturesMode = true
         XCTAssertTrue(settings.canTakePhoto)
-        XCTAssertEqual(settings.remainingPhotosToday, 999)
+        XCTAssertEqual(settings.remainingPhotosToday, 24)
     }
 }

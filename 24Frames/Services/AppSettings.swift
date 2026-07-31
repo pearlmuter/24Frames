@@ -63,17 +63,18 @@ public class AppSettings: ObservableObject {
     
     public var remainingPhotosToday: Int {
         checkDailyReset()
-        if isInfinitePicturesMode {
-            return 999
+        if photosTakenToday >= 24 && !isInfinitePicturesMode {
+            return 0
         }
-        return max(0, 24 - photosTakenToday)
+        let photosInRoll = photosTakenToday % 24
+        return max(0, 24 - photosInRoll)
     }
     
     public var canTakePhoto: Bool {
         checkDailyReset()
         if isInfinitePicturesMode { return true }
         if isDevelopModeEnabled && hasSubmittedRollToday { return false }
-        return remainingPhotosToday > 0
+        return photosTakenToday < 24
     }
     
     public func incrementPhotoCount() {
