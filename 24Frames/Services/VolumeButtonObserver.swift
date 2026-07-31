@@ -1,66 +1,78 @@
 import UIKit
+import SwiftUI
 import AVFoundation
 import MediaPlayer
-import SwiftUI
 
-public class VolumeButtonObserver: NSObject, ObservableObject {
-    private var isListening = false
-    private var isKVOAdded = false
-    
+public struct VolumeViewHidden: UIViewRepresentable {
+    public init() {}
+    public func makeUIView(context: Context) -> MPVolumeView {
+        let view = MPVolumeView(frame: .zero)
+        view.alpha = 0.0001
+        return view
+    }
+    public func updateUIView(_ uiView: MPVolumeView, context: Context) {}
+}
+
+public class VolumeButtonObserver: ObservableObject {
     public var onVolumeButtonTap: (() -> Void)?
     
-    public override init() {
-        super.init()
-    }
+    private var observation: NSKeyValueObservation?
+    private var initialVolume: Float = 0.0
+    private lazy var volumeView: MPVolumeView = {
+        let view = MPVolumeView(frame: CGRect(x: -1000, y: -1000, width: 1, height: 1))
+        view.isHidden = false
+        view.alpha = 0.0001
+        return view
+    }()
+    
+    public init() {}
     
     public func startListening() {
-        guard !isListening else { return }
-        isListening = true
-        
         let audioSession = AVAudioSession.sharedInstance()
         do {
-            try audioSession.setCategory(.playback, options: .mixWithOthers)
+            try audioSession.setCategory(.playback, options: [.mixWithOthers])
             try audioSession.setActive(true)
         } catch {
-            print("Audio session configuration error: \(error)")
+            print("VolumeButtonObserver error setting audio session: \(error)")
         }
         
-        if !isKVOAdded {
-            audioSession.addObserver(self, forKeyPath: "outputVolume", options: [.new, .old], context: nil)
-            isKVOAdded = true
+        DispatchQueue.main.async {
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let window = windowScene.windows.first {
+                if !window.subviews.contains(self.volumeView) {
+                    window.addSubview(self.volumeView)
+                }
+            }
         }
-    }
-    
-    public func stopListening() {
-        guard isListening else { return }
-        isListening = false
-        if isKVOAdded {
-            AVAudioSession.sharedInstance().removeObserver(self, forKeyPath: "outputVolume")
-            isKVOAdded = false
-        }
-    }
-    
-    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "outputVolume" {
-            guard isListening else { return }
-            DispatchQueue.main.async { [weak self] in
+        
+        initialVolume = audioSession.outputVolume
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(volumeDidChange(_:)),
+            name: NSNotification.Name("AVSystemController_SystemVolumeDidChangeNotification"),
+            object: nil
+        )
+        
+        observation = audioSession.observe(\.outputVolume, options: [.new, .old]) { [weak self] session, change in
+            DispatchQueue.main.async {
                 self?.onVolumeButtonTap?()
             }
         }
     }
     
-    deinit {
-        stopListening()
+    @objc private func volumeDidChange(_ notification: Notification) {
+        DispatchQueue.main.async {
+            self.onVolumeButtonTap?()
+        }
     }
-}
-
-public struct VolumeViewHidden: UIViewRepresentable {
-    public init() {}
-    public func makeUIView(context: Context) -> MPVolumeView {
-        let volumeView = MPVolumeView(frame: CGRect(x: -100, y: -100, width: 1, height: 1))
-        volumeView.alpha = 0.0001
-        volumeView.clipsToBounds = true
-        return volumeView
+    
+    public func stopListening() {
+        observation?.invalidate()
+        observation = nil
+        NotificationCenter.default.removeObserver(self)
+        DispatchQueue.main.async {
+            self.volumeView.removeFromSuperview()
+        }
     }
-    public func updateUIView(_ uiView: MPVolumeView, context: Context) {}
 }

@@ -29,13 +29,21 @@ public struct ContentView: View {
                 switch cameraManager.permissionState {
                 case .authorized:
                     VStack(spacing: 0) {
-                        // Top Header Bar with Countdown & Optional Film Roll Icon
+                        // Top Header Bar with Countdown & Optional Mustard Yellow Infinity Symbol & Film Roll Icon
                         HStack {
                             Spacer()
                             
-                            Text(settings.isInfinitePicturesMode ? "∞" : "\(settings.remainingPhotosToday)")
-                                .font(.system(size: 48, weight: .black, design: .monospaced))
-                                .foregroundColor(.white)
+                            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                                Text("\(settings.remainingPhotosToday)")
+                                    .font(.system(size: 48, weight: .black, design: .monospaced))
+                                    .foregroundColor(.white)
+                                
+                                if settings.isInfinitePicturesMode {
+                                    Text("∞")
+                                        .font(.system(size: 32, weight: .bold))
+                                        .foregroundColor(Color(red: 0.95, green: 0.75, blue: 0.1)) // Airport sign / Mustard yellow
+                                }
+                            }
                             
                             Spacer()
                         }
@@ -43,7 +51,10 @@ public struct ContentView: View {
                             HStack {
                                 Spacer()
                                 if settings.isDevelopModeEnabled {
-                                    FilmRollButtonView(rollCount: filmManager.activeRollPhotoCount) {
+                                    FilmRollButtonView(
+                                        rollCount: filmManager.activeRollPhotoCount,
+                                        countdownString: filmManager.nextDevelopCountdownString
+                                    ) {
                                         HapticManager.medium()
                                         let count = filmManager.activeRollPhotoCount
                                         developAlertMessage = "Are you sure? You took \(count) pictures. You can only get one roll of pictures for today."
@@ -73,7 +84,7 @@ public struct ContentView: View {
                         
                         Spacer(minLength: 0)
                         
-                        // Bottom Controls Bar (Positioned at the very bottom of the screen)
+                        // Bottom Controls Bar (Lowered to bottom edge)
                         ZStack {
                             ShutterRingView(isAnimating: $isShutterRingAnimating)
                             
@@ -90,11 +101,16 @@ public struct ContentView: View {
                             }
                             
                             HStack {
-                                RecentPhotoThumbnailView(image: cameraManager.lastSavedThumbnail) {
-                                    HapticManager.selection()
-                                    isShowingPhotoLibrary = true
+                                if !settings.isDevelopModeEnabled {
+                                    RecentPhotoThumbnailView(image: cameraManager.lastSavedThumbnail) {
+                                        HapticManager.selection()
+                                        isShowingPhotoLibrary = true
+                                    }
+                                    .padding(.leading, 28)
+                                } else {
+                                    Spacer()
+                                        .frame(width: 48)
                                 }
-                                .padding(.leading, 28)
                                 
                                 Spacer()
                                 

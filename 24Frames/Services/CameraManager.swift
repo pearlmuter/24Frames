@@ -73,7 +73,7 @@ public class CameraManager: NSObject, ObservableObject {
                 self.captureSession.removeInput(currentInput)
             }
             
-            // Strictly lock lens to Primary Wide (.builtInWideAngleCamera) for specified position
+            // Lock lens to Primary Wide (.builtInWideAngleCamera)
             guard let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: self.cameraPosition) else {
                 DispatchQueue.main.async {
                     self.errorMessage = "Primary Wide camera is unavailable for position: \(self.cameraPosition.rawValue)."
@@ -189,14 +189,12 @@ public class CameraManager: NSObject, ObservableObject {
                     connection.videoOrientation = videoOrientation
                 }
                 
-                if self.cameraPosition == .back {
-                    if connection.isVideoMirroringSupported {
-                        connection.automaticallyAdjustsVideoMirroring = true
-                    }
-                } else {
-                    if connection.isVideoMirroringSupported {
-                        connection.automaticallyAdjustsVideoMirroring = false
+                if connection.isVideoMirroringSupported {
+                    connection.automaticallyAdjustsVideoMirroring = false
+                    if self.cameraPosition == .back {
                         connection.isVideoMirrored = false
+                    } else {
+                        connection.isVideoMirrored = true
                     }
                 }
             }
@@ -224,8 +222,11 @@ public class CameraManager: NSObject, ObservableObject {
             return rawData
         }
         
-        if let heicData = ciContext.heifRepresentation(of: outputImage, format: .RGBA8, colorSpace: CGColorSpaceCreateDeviceRGB()) {
-            return heicData
+        if let cgImage = ciContext.createCGImage(outputImage, from: outputImage.extent) {
+            let uiImage = UIImage(cgImage: cgImage, scale: 1.0, orientation: .up)
+            if let bwData = uiImage.jpegData(compressionQuality: 0.98) {
+                return bwData
+            }
         }
         
         return rawData

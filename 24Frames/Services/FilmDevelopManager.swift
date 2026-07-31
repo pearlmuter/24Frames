@@ -15,8 +15,11 @@ public class FilmDevelopManager: ObservableObject {
     
     @Published public var pendingRollCount: Int = 0
     @Published public var activeRollPhotoCount: Int = 0
+    @Published public var nextDevelopCountdownString: String? = nil
     
     private let fileManager = FileManager.default
+    private var timer: Timer?
+    
     private var pendingDirectory: URL {
         let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
         let dir = appSupport.appendingPathComponent("PendingFilmRolls", isDirectory: true)
@@ -36,6 +39,15 @@ public class FilmDevelopManager: ObservableObject {
     
     public init() {
         refreshActiveCount()
+        startCountdownTimer()
+    }
+    
+    public func startCountdownTimer() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.updateNextDevelopCountdown()
+        }
+        updateNextDevelopCountdown()
     }
     
     public func refreshActiveCount() {
@@ -43,6 +55,48 @@ public class FilmDevelopManager: ObservableObject {
         let photoFiles = files.filter { $0.hasSuffix(".heic") || $0.hasSuffix(".jpg") }
         DispatchQueue.main.async {
             self.activeRollPhotoCount = photoFiles.count
+        }
+    }
+    
+    public func updateNextDevelopCountdown() {
+        let contents = (try? fileManager.contentsOfDirectory(atPath: pendingDirectory.path)) ?? []
+        let now = Date()
+        var earliestTargetDate: Date? = nil
+        
+        for dirName in contents {
+            if dirName == "ActiveRoll" { continue }
+            let rollDir = pendingDirectory.appendingPathComponent(dirName)
+            let manifestURL = rollDir.appendingPathComponent("manifest.json")
+            guard let manifestData = try? Data(contentsOf: manifestURL),
+                  let manifest = try? JSONDecoder().decode(PendingPhotoRoll.self, from: manifestData) else {
+                continue
+            }
+            
+            if manifest.targetDevelopDate > now {
+                if earliestTargetDate == nil || manifest.targetDevelopDate < earliestTargetDate! {
+                    earliestTargetDate = manifest.targetDevelopDate
+                }
+            }
+        }
+        
+        DispatchQueue.main.async {
+            if let targetDate = earliestTargetDate {
+                let diff = Int(targetDate.timeIntervalSince(now))
+                if diff <= 0 {
+                    self.nextDevelopCountdownString = nil
+                } else {
+                    let hours = diff / 3600
+                    let minutes = (diff % 3600) / 60
+                    let seconds = diff % 60
+                    if hours > 0 {
+                        self.nextDevelopCountdownString = String(format: "%02dh %02dm", hours, minutes)
+                    } else {
+                        self.nextDevelopCountdownString = String(format: "%02dm %02ds", minutes, seconds)
+                    }
+                }
+            } else {
+                self.nextDevelopCountdownString = nil
+            }
         }
     }
     
@@ -115,6 +169,7 @@ public class FilmDevelopManager: ObservableObject {
             }
             
             refreshActiveCount()
+            updateNextDevelopCountdown()
             completion(count)
         }
     }
@@ -137,5 +192,6 @@ public class FilmDevelopManager: ObservableObject {
                 try? fileManager.removeItem(at: rollDir)
             }
         }
+        updateNextDevelopCountdown()
     }
 }
