@@ -1,5 +1,6 @@
 import SwiftUI
 import Combine
+import UIKit
 
 public enum DevelopmentSpeed: String, CaseIterable, Identifiable, Codable {
     case immediate = "Develop immediately"
@@ -12,8 +13,24 @@ public enum DevelopmentSpeed: String, CaseIterable, Identifiable, Codable {
 public class AppSettings: ObservableObject {
     public static let shared = AppSettings()
     
+    private var cancellables = Set<AnyCancellable>()
+    private var previousDevelopState: Bool = false
+    
+    public init() {
+        UserDefaults.standard.register(defaults: [
+            "isInfinitePicturesMode": false,
+            "isBlackAndWhiteMode": false,
+            "isDevelopModeEnabled": false,
+            "developmentSpeedRaw": DevelopmentSpeed.immediate.rawValue
+        ])
+        
+        previousDevelopState = isDevelopModeEnabled
+        checkDailyReset()
+        setupUserDefaultsObservers()
+    }
+    
     public var isInfinitePicturesMode: Bool {
-        get { UserDefaults.standard.bool(forKey: "isInfinitePicturesMode") }
+        get { readBool(forKey: "isInfinitePicturesMode") }
         set {
             UserDefaults.standard.set(newValue, forKey: "isInfinitePicturesMode")
             objectWillChange.send()
@@ -21,7 +38,7 @@ public class AppSettings: ObservableObject {
     }
     
     public var isBlackAndWhiteMode: Bool {
-        get { UserDefaults.standard.bool(forKey: "isBlackAndWhiteMode") }
+        get { readBool(forKey: "isBlackAndWhiteMode") }
         set {
             UserDefaults.standard.set(newValue, forKey: "isBlackAndWhiteMode")
             objectWillChange.send()
@@ -29,58 +46,71 @@ public class AppSettings: ObservableObject {
     }
     
     public var isDevelopModeEnabled: Bool {
-        get { UserDefaults.standard.bool(forKey: "isDevelopModeEnabled") }
+        get { readBool(forKey: "isDevelopModeEnabled") }
         set {
             UserDefaults.standard.set(newValue, forKey: "isDevelopModeEnabled")
             objectWillChange.send()
         }
     }
     
-    @AppStorage("developmentSpeedRaw") public var developmentSpeedRaw: String = DevelopmentSpeed.immediate.rawValue
-    
-    public var developmentSpeed: DevelopmentSpeed {
-        get {
-            let raw = UserDefaults.standard.string(forKey: "developmentSpeedRaw") ?? developmentSpeedRaw
-            return DevelopmentSpeed(rawValue: raw) ?? .immediate
-        }
+    public var developmentSpeedRaw: String {
+        get { UserDefaults.standard.string(forKey: "developmentSpeedRaw") ?? DevelopmentSpeed.immediate.rawValue }
         set {
-            developmentSpeedRaw = newValue.rawValue
-            UserDefaults.standard.set(newValue.rawValue, forKey: "developmentSpeedRaw")
+            UserDefaults.standard.set(newValue, forKey: "developmentSpeedRaw")
             objectWillChange.send()
         }
+    }
+    
+    public var developmentSpeed: DevelopmentSpeed {
+        get { DevelopmentSpeed(rawValue: developmentSpeedRaw) ?? .immediate }
+        set { developmentSpeedRaw = newValue.rawValue }
     }
     
     @AppStorage("photosTakenToday") public var photosTakenToday: Int = 0
     @AppStorage("hasSubmittedRollToday") public var hasSubmittedRollToday: Bool = false
     @AppStorage("lastResetDateString") private var lastResetDateString: String = ""
     
-    private var observer: AnyCancellable?
-    private var previousDevelopState: Bool = false
-    
-    public init() {
-        previousDevelopState = isDevelopModeEnabled
-        checkDailyReset()
-        setupUserDefaultsObserver()
+    private func readBool(forKey key: String) -> Bool {
+        let obj = UserDefaults.standard.object(forKey: key)
+        if let b = obj as? Bool { return b }
+        if let i = obj as? Int { return i != 0 }
+        if let s = obj as? String { return (s as NSString).boolValue }
+        return false
     }
     
-    private func setupUserDefaultsObserver() {
-        observer = NotificationCenter.default
+    private func setupUserDefaultsObservers() {
+        // Observe UserDefaults change notifications
+        NotificationCenter.default
             .publisher(for: UserDefaults.didChangeNotification)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                guard let self = self else { return }
-                self.objectWillChange.send()
-                
-                let currentDevelopState = self.isDevelopModeEnabled
-                if self.previousDevelopState == true && currentDevelopState == false {
-                    FilmDevelopManager.shared.flushAllPendingAndActiveRollsToCameraRoll(photoSaver: PhotoSaver())
-                }
-                self.previousDevelopState = currentDevelopState
-                
-                if self.developmentSpeed == .immediate {
-                    FilmDevelopManager.shared.checkAndProcessScheduledDevelopments(photoSaver: PhotoSaver())
-                }
+                self?.handleSettingsChange()
             }
+            .store(in: &cancellables)
+        
+        // Observe app entering foreground to synchronize system Settings changes
+        NotificationCenter.default
+            .publisher(for: UIApplication.willEnterForegroundNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                UserDefaults.standard.synchronize()
+                self?.handleSettingsChange()
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func handleSettingsChange() {
+        objectWillChange.send()
+        
+        let currentDevelopState = isDevelopModeEnabled
+        if previousDevelopState == true && currentDevelopState == false {
+            FilmDevelopManager.shared.flushAllPendingAndActiveRollsToCameraRoll(photoSaver: PhotoSaver())
+        }
+        previousDevelopState = currentDevelopState
+        
+        if developmentSpeed == .immediate {
+            FilmDevelopManager.shared.checkAndProcessScheduledDevelopments(photoSaver: PhotoSaver())
+        }
     }
     
     public func checkDailyReset() {
