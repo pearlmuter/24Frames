@@ -198,18 +198,23 @@ public class AppSettings: ObservableObject {
     
     public var remainingPhotosToday: Int {
         checkDailyReset()
-        if photosTakenToday >= 24 && !isInfinitePicturesMode {
-            return 0
-        }
+        // Always show remaining photos in the current 24-photo roll.
+        // Toggling infinite mode on/off doesn't change the counter —
+        // it only determines whether a new roll auto-starts when you hit 0.
         let photosInRoll = photosTakenToday % 24
-        return max(0, 24 - photosInRoll)
+        if photosInRoll == 0 && photosTakenToday > 0 {
+            // Completed a full roll. In infinite mode a new roll starts (24);
+            // without infinite mode, this roll is spent (0).
+            return isInfinitePicturesMode ? 24 : 0
+        }
+        return 24 - photosInRoll
     }
     
     public var canTakePhoto: Bool {
         checkDailyReset()
         if isInfinitePicturesMode { return true }
         if isDevelopModeEnabled && hasSubmittedRollToday { return false }
-        return photosTakenToday < 24
+        return remainingPhotosToday > 0
     }
     
     public func incrementPhotoCount() {

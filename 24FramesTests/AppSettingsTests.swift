@@ -46,4 +46,24 @@ final class AppSettingsTests: XCTestCase {
         XCTAssertTrue(settings.canTakePhoto)
         XCTAssertEqual(settings.remainingPhotosToday, 24)
     }
+    
+    func testInfiniteOffAtRollBoundaryShowsZero() {
+        // User took exactly 24 photos, infinite was on (showing 24),
+        // then turned infinite off → should show 0 (roll is spent)
+        let settings = AppSettings.shared
+        settings.photosTakenToday = 24
+        settings.isInfinitePicturesMode = false
+        XCTAssertEqual(settings.remainingPhotosToday, 0)
+        XCTAssertFalse(settings.canTakePhoto)
+    }
+    
+    func testInfiniteOffMidRollPreservesRemaining() {
+        // User took 30 photos (infinite was on), turned infinite off →
+        // should show 18 remaining in current roll (24 - 6)
+        let settings = AppSettings.shared
+        settings.photosTakenToday = 30
+        settings.isInfinitePicturesMode = false
+        XCTAssertEqual(settings.remainingPhotosToday, 18)
+        XCTAssertTrue(settings.canTakePhoto)
+    }
 }
