@@ -13,6 +13,20 @@ public enum DevelopmentSpeed: String, CaseIterable, Identifiable, Codable {
 public class AppSettings: ObservableObject {
     public static let shared = AppSettings()
     
+    @AppStorage("isInfinitePicturesMode") public var isInfinitePicturesMode: Bool = false
+    @AppStorage("isBlackAndWhiteMode") public var isBlackAndWhiteMode: Bool = false
+    @AppStorage("isDevelopModeEnabled") public var isDevelopModeEnabled: Bool = false
+    @AppStorage("developmentSpeedRaw") public var developmentSpeedRaw: String = DevelopmentSpeed.immediate.rawValue
+    
+    public var developmentSpeed: DevelopmentSpeed {
+        get { DevelopmentSpeed(rawValue: developmentSpeedRaw) ?? .immediate }
+        set { developmentSpeedRaw = newValue.rawValue }
+    }
+    
+    @AppStorage("photosTakenToday") public var photosTakenToday: Int = 0
+    @AppStorage("hasSubmittedRollToday") public var hasSubmittedRollToday: Bool = false
+    @AppStorage("lastResetDateString") private var lastResetDateString: String = ""
+    
     private var cancellables = Set<AnyCancellable>()
     private var previousDevelopState: Bool = false
     
@@ -29,77 +43,26 @@ public class AppSettings: ObservableObject {
         setupUserDefaultsObservers()
     }
     
-    public var isInfinitePicturesMode: Bool {
-        get { readBool(forKey: "isInfinitePicturesMode") }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "isInfinitePicturesMode")
-            objectWillChange.send()
-        }
-    }
-    
-    public var isBlackAndWhiteMode: Bool {
-        get { readBool(forKey: "isBlackAndWhiteMode") }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "isBlackAndWhiteMode")
-            objectWillChange.send()
-        }
-    }
-    
-    public var isDevelopModeEnabled: Bool {
-        get { readBool(forKey: "isDevelopModeEnabled") }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "isDevelopModeEnabled")
-            objectWillChange.send()
-        }
-    }
-    
-    public var developmentSpeedRaw: String {
-        get { UserDefaults.standard.string(forKey: "developmentSpeedRaw") ?? DevelopmentSpeed.immediate.rawValue }
-        set {
-            UserDefaults.standard.set(newValue, forKey: "developmentSpeedRaw")
-            objectWillChange.send()
-        }
-    }
-    
-    public var developmentSpeed: DevelopmentSpeed {
-        get { DevelopmentSpeed(rawValue: developmentSpeedRaw) ?? .immediate }
-        set { developmentSpeedRaw = newValue.rawValue }
-    }
-    
-    @AppStorage("photosTakenToday") public var photosTakenToday: Int = 0
-    @AppStorage("hasSubmittedRollToday") public var hasSubmittedRollToday: Bool = false
-    @AppStorage("lastResetDateString") private var lastResetDateString: String = ""
-    
-    private func readBool(forKey key: String) -> Bool {
-        let obj = UserDefaults.standard.object(forKey: key)
-        if let b = obj as? Bool { return b }
-        if let i = obj as? Int { return i != 0 }
-        if let s = obj as? String { return (s as NSString).boolValue }
-        return false
-    }
-    
     private func setupUserDefaultsObservers() {
-        // Observe UserDefaults change notifications
         NotificationCenter.default
             .publisher(for: UserDefaults.didChangeNotification)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.handleSettingsChange()
+                self?.handleNotification()
             }
             .store(in: &cancellables)
         
-        // Observe app entering foreground to synchronize system Settings changes
         NotificationCenter.default
             .publisher(for: UIApplication.willEnterForegroundNotification)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 UserDefaults.standard.synchronize()
-                self?.handleSettingsChange()
+                self?.handleNotification()
             }
             .store(in: &cancellables)
     }
     
-    private func handleSettingsChange() {
+    private func handleNotification() {
         objectWillChange.send()
         
         let currentDevelopState = isDevelopModeEnabled
