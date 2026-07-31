@@ -22,7 +22,7 @@ public struct CameraPreview: UIViewRepresentable {
         let view = VideoPreviewView()
         view.backgroundColor = .black
         view.videoPreviewLayer.session = cameraManager.captureSession
-        view.videoPreviewLayer.videoGravity = .resizeAspect
+        view.videoPreviewLayer.videoGravity = .resizeAspectFill
         
         let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleTap(_:)))
         view.addGestureRecognizer(tapGesture)
@@ -32,9 +32,17 @@ public struct CameraPreview: UIViewRepresentable {
     
     public func updateUIView(_ uiView: VideoPreviewView, context: Context) {
         uiView.videoPreviewLayer.session = cameraManager.captureSession
-        if let connection = uiView.videoPreviewLayer.connection, connection.isVideoMirroringSupported {
-            connection.automaticallyAdjustsVideoMirroring = false
-            connection.isVideoMirrored = (cameraManager.cameraPosition == .front)
+        if let connection = uiView.videoPreviewLayer.connection {
+            if cameraManager.cameraPosition == .back {
+                if connection.isVideoMirroringSupported {
+                    connection.automaticallyAdjustsVideoMirroring = true
+                }
+            } else {
+                if connection.isVideoMirroringSupported {
+                    connection.automaticallyAdjustsVideoMirroring = false
+                    connection.isVideoMirrored = true
+                }
+            }
         }
     }
     

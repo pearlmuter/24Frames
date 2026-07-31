@@ -8,7 +8,6 @@ public struct ContentView: View {
     
     @State private var isShutterRingAnimating = false
     @State private var isShowingPhotoLibrary = false
-    @State private var isShowingSettings = false
     @State private var isShowingDevelopAlert = false
     @State private var developAlertMessage = ""
     
@@ -26,37 +25,22 @@ public struct ContentView: View {
             switch cameraManager.permissionState {
             case .authorized:
                 VStack(spacing: 0) {
-                    // Header Bar with Countdown & Settings Gear
+                    // Top Bar Overlay with Countdown Display
                     HStack {
                         Spacer()
                         
-                        // Remaining photos countdown display
                         Text(settings.isInfinitePicturesMode ? "∞" : "\(settings.remainingPhotosToday)")
-                            .font(.system(size: 44, weight: .black, design: .monospaced))
+                            .font(.system(size: 48, weight: .black, design: .monospaced))
                             .foregroundColor(.white)
                         
                         Spacer()
                     }
-                    .overlay(
-                        HStack {
-                            Spacer()
-                            Button(action: {
-                                HapticManager.selection()
-                                isShowingSettings = true
-                            }) {
-                                Image(systemName: "gearshape.fill")
-                                    .font(.system(size: 22, weight: .bold))
-                                    .foregroundColor(.white)
-                                    .padding(.trailing, 24)
-                            }
-                        }
-                    )
-                    .padding(.top, 12)
-                    .padding(.bottom, 8)
+                    .padding(.top, 8)
+                    .padding(.bottom, 4)
                     
                     Spacer(minLength: 0)
                     
-                    // 4:3 Aspect Ratio Camera View Finder with black letterboxing
+                    // 4:3 Aspect Ratio Camera View Finder
                     ZStack {
                         CameraPreview(cameraManager: cameraManager)
                             .grayscale(settings.isBlackAndWhiteMode ? 1.0 : 0.0)
@@ -92,10 +76,10 @@ public struct ContentView: View {
                             .background(Color.red)
                             .cornerRadius(20)
                         }
-                        .padding(.bottom, 12)
+                        .padding(.bottom, 16)
                     }
                     
-                    // Bottom Controls Bar
+                    // Bottom Controls Bar (Positioned comfortably near bottom safe area)
                     ZStack {
                         ShutterRingView(isAnimating: $isShutterRingAnimating)
                         
@@ -126,7 +110,7 @@ public struct ContentView: View {
                             .padding(.trailing, 28)
                         }
                     }
-                    .padding(.bottom, 52)
+                    .padding(.bottom, 24)
                 }
             case .denied:
                 PermissionDeniedView()
@@ -137,9 +121,6 @@ public struct ContentView: View {
         }
         .sheet(isPresented: $isShowingPhotoLibrary) {
             PhotoLibraryPickerView()
-        }
-        .sheet(isPresented: $isShowingSettings) {
-            SettingsView()
         }
         .alert(isPresented: $isShowingDevelopAlert) {
             Alert(

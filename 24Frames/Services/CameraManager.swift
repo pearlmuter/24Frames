@@ -108,10 +108,6 @@ public class CameraManager: NSObject, ObservableObject {
                     
                     self.photoOutput.isHighResolutionCaptureEnabled = true
                     self.photoOutput.maxPhotoQualityPrioritization = .speed
-                    
-                    if self.photoOutput.availablePhotoCodecTypes.contains(.hevc) {
-                        // HEVC codec supported
-                    }
                 } else {
                     DispatchQueue.main.async {
                         self.errorMessage = "Cannot add photo output to capture session."
@@ -193,8 +189,15 @@ public class CameraManager: NSObject, ObservableObject {
                     connection.videoOrientation = videoOrientation
                 }
                 
-                if connection.isVideoMirroringSupported {
-                    connection.isVideoMirrored = (self.cameraPosition == .front)
+                if self.cameraPosition == .back {
+                    if connection.isVideoMirroringSupported {
+                        connection.automaticallyAdjustsVideoMirroring = true
+                    }
+                } else {
+                    if connection.isVideoMirroringSupported {
+                        connection.automaticallyAdjustsVideoMirroring = false
+                        connection.isVideoMirrored = false
+                    }
                 }
             }
             
