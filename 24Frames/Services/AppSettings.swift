@@ -15,11 +15,18 @@ public class AppSettings: ObservableObject {
     @AppStorage("isInfinitePicturesMode") public var isInfinitePicturesMode: Bool = false
     @AppStorage("isBlackAndWhiteMode") public var isBlackAndWhiteMode: Bool = false
     @AppStorage("isDevelopModeEnabled") public var isDevelopModeEnabled: Bool = false
-    @AppStorage("developmentSpeedRaw") private var developmentSpeedRaw: String = DevelopmentSpeed.immediate.rawValue
+    @AppStorage("developmentSpeedRaw") public var developmentSpeedRaw: String = DevelopmentSpeed.immediate.rawValue
     
     public var developmentSpeed: DevelopmentSpeed {
-        get { DevelopmentSpeed(rawValue: developmentSpeedRaw) ?? .immediate }
-        set { developmentSpeedRaw = newValue.rawValue }
+        get {
+            let raw = UserDefaults.standard.string(forKey: "developmentSpeedRaw") ?? developmentSpeedRaw
+            return DevelopmentSpeed(rawValue: raw) ?? .immediate
+        }
+        set {
+            developmentSpeedRaw = newValue.rawValue
+            UserDefaults.standard.set(newValue.rawValue, forKey: "developmentSpeedRaw")
+            objectWillChange.send()
+        }
     }
     
     @AppStorage("photosTakenToday") public var photosTakenToday: Int = 0
@@ -51,11 +58,9 @@ public class AppSettings: ObservableObject {
                 }
                 self.previousDevelopState = currentDevelopState
                 
-                let currentSpeed = self.developmentSpeedRaw
                 if self.developmentSpeed == .immediate {
                     FilmDevelopManager.shared.checkAndProcessScheduledDevelopments(photoSaver: PhotoSaver())
                 }
-                self.previousSpeedState = currentSpeed
             }
     }
     

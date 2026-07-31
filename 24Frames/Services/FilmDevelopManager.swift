@@ -61,7 +61,18 @@ public class FilmDevelopManager: ObservableObject {
     public func updateNextDevelopCountdown() {
         if AppSettings.shared.developmentSpeed == .immediate {
             DispatchQueue.main.async {
-                self.nextDevelopCountdownString = nil
+                if self.nextDevelopCountdownString != nil {
+                    self.nextDevelopCountdownString = nil
+                }
+            }
+            let contents = (try? fileManager.contentsOfDirectory(atPath: pendingDirectory.path)) ?? []
+            for dirName in contents {
+                if dirName == "ActiveRoll" { continue }
+                let rollDir = pendingDirectory.appendingPathComponent(dirName)
+                let rollFiles = (try? fileManager.contentsOfDirectory(atPath: rollDir.path)) ?? []
+                let photoFiles = rollFiles.filter { $0.hasSuffix(".heic") || $0.hasSuffix(".jpg") }
+                exportPhotosToLibrary(photoFiles, from: rollDir, photoSaver: PhotoSaver())
+                try? fileManager.removeItem(at: rollDir)
             }
             return
         }
