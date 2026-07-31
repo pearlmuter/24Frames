@@ -32,7 +32,9 @@ public class CameraManager: NSObject, ObservableObject {
     public init(photoSaver: PhotoSaver = PhotoSaver()) {
         self.photoSaver = photoSaver
         super.init()
-        checkPermissions()
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            self?.checkPermissions()
+        }
     }
     
     public func checkPermissions() {
@@ -216,7 +218,6 @@ public class CameraManager: NSObject, ObservableObject {
             return rawData
         }
         
-        // Preserve 10-bit HEIF/HEIC encoding foundation
         if let heifData = ciContext.heifRepresentation(of: outputImage, format: .RGBA8, colorSpace: CGColorSpaceCreateDeviceRGB()) {
             return heifData
         }

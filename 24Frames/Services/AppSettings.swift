@@ -13,19 +13,25 @@ public enum DevelopmentSpeed: String, CaseIterable, Identifiable, Codable {
 public class AppSettings: ObservableObject {
     public static let shared = AppSettings()
     
-    @AppStorage("isInfinitePicturesMode") public var isInfinitePicturesMode: Bool = false
-    @AppStorage("isBlackAndWhiteMode") public var isBlackAndWhiteMode: Bool = false
-    @AppStorage("isDevelopModeEnabled") public var isDevelopModeEnabled: Bool = false
-    @AppStorage("developmentSpeedRaw") public var developmentSpeedRaw: String = DevelopmentSpeed.immediate.rawValue
+    @Published public var isInfinitePicturesMode: Bool = false
+    @Published public var isBlackAndWhiteMode: Bool = false
+    @Published public var isDevelopModeEnabled: Bool = false
+    @Published public var developmentSpeedRaw: String = DevelopmentSpeed.immediate.rawValue
+    @Published public var photosTakenToday: Int = 0
+    @Published public var hasSubmittedRollToday: Bool = false
     
     public var developmentSpeed: DevelopmentSpeed {
         get { DevelopmentSpeed(rawValue: developmentSpeedRaw) ?? .immediate }
-        set { developmentSpeedRaw = newValue.rawValue }
+        set {
+            developmentSpeedRaw = newValue.rawValue
+            UserDefaults.standard.set(newValue.rawValue, forKey: "developmentSpeedRaw")
+        }
     }
     
-    @AppStorage("photosTakenToday") public var photosTakenToday: Int = 0
-    @AppStorage("hasSubmittedRollToday") public var hasSubmittedRollToday: Bool = false
-    @AppStorage("lastResetDateString") private var lastResetDateString: String = ""
+    private var lastResetDateString: String {
+        get { UserDefaults.standard.string(forKey: "lastResetDateString") ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: "lastResetDateString") }
+    }
     
     private var cancellables = Set<AnyCancellable>()
     private var previousDevelopState: Bool = false
@@ -35,12 +41,54 @@ public class AppSettings: ObservableObject {
             "isInfinitePicturesMode": false,
             "isBlackAndWhiteMode": false,
             "isDevelopModeEnabled": false,
-            "developmentSpeedRaw": DevelopmentSpeed.immediate.rawValue
+            "developmentSpeedRaw": DevelopmentSpeed.immediate.rawValue,
+            "photosTakenToday": 0,
+            "hasSubmittedRollToday": false,
+            "lastResetDateString": ""
         ])
         
+        syncFromUserDefaults()
         previousDevelopState = isDevelopModeEnabled
         checkDailyReset()
         setupUserDefaultsObservers()
+    }
+    
+    private func readBool(forKey key: String) -> Bool {
+        let obj = UserDefaults.standard.object(forKey: key)
+        if let b = obj as? Bool { return b }
+        if let i = obj as? Int { return i != 0 }
+        if let s = obj as? String { return (s as NSString).boolValue }
+        return false
+    }
+    
+    public func syncFromUserDefaults() {
+        let defaults = UserDefaults.standard
+        defaults.synchronize()
+        
+        let newInfinite = readBool(forKey: "isInfinitePicturesMode")
+        let newBW = readBool(forKey: "isBlackAndWhiteMode")
+        let newDevelop = readBool(forKey: "isDevelopModeEnabled")
+        let newSpeed = defaults.string(forKey: "developmentSpeedRaw") ?? DevelopmentSpeed.immediate.rawValue
+        let newPhotosTaken = defaults.integer(forKey: "photosTakenToday")
+        let newHasSubmitted = readBool(forKey: "hasSubmittedRollToday")
+        
+        DispatchQueue.main.async {
+            if self.isInfinitePicturesMode != newInfinite { self.isInfinitePicturesMode = newInfinite }
+            if self.isBlackAndWhiteMode != newBW { self.isBlackAndWhiteMode = newBW }
+            if self.isDevelopModeEnabled != newDevelop { self.isDevelopModeEnabled = newDevelop }
+            if self.developmentSpeedRaw != newSpeed { self.developmentSpeedRaw = newSpeed }
+            if self.photosTakenToday != newPhotosTaken { self.photosTakenToday = newPhotosTaken }
+            if self.hasSubmittedRollToday != newHasSubmitted { self.hasSubmittedRollToday = newHasSubmitted }
+            
+            if self.previousDevelopState == true && self.isDevelopModeEnabled == false {
+                FilmDevelopManager.shared.flushAllPendingAndActiveRollsToCameraRoll(photoSaver: PhotoSaver())
+            }
+            self.previousDevelopState = self.isDevelopModeEnabled
+            
+            if self.developmentSpeed == .immediate {
+                FilmDevelopManager.shared.checkAndProcessScheduledDevelopments(photoSaver: PhotoSaver())
+            }
+        }
     }
     
     private func setupUserDefaultsObservers() {
@@ -48,7 +96,7 @@ public class AppSettings: ObservableObject {
             .publisher(for: UserDefaults.didChangeNotification)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.handleNotification()
+                self?.syncFromUserDefaults()
             }
             .store(in: &cancellables)
         
@@ -56,24 +104,9 @@ public class AppSettings: ObservableObject {
             .publisher(for: UIApplication.willEnterForegroundNotification)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                UserDefaults.standard.synchronize()
-                self?.handleNotification()
+                self?.syncFromUserDefaults()
             }
             .store(in: &cancellables)
-    }
-    
-    private func handleNotification() {
-        objectWillChange.send()
-        
-        let currentDevelopState = isDevelopModeEnabled
-        if previousDevelopState == true && currentDevelopState == false {
-            FilmDevelopManager.shared.flushAllPendingAndActiveRollsToCameraRoll(photoSaver: PhotoSaver())
-        }
-        previousDevelopState = currentDevelopState
-        
-        if developmentSpeed == .immediate {
-            FilmDevelopManager.shared.checkAndProcessScheduledDevelopments(photoSaver: PhotoSaver())
-        }
     }
     
     public func checkDailyReset() {
@@ -85,6 +118,8 @@ public class AppSettings: ObservableObject {
             lastResetDateString = todayString
             photosTakenToday = 0
             hasSubmittedRollToday = false
+            UserDefaults.standard.set(0, forKey: "photosTakenToday")
+            UserDefaults.standard.set(false, forKey: "hasSubmittedRollToday")
         }
     }
     
@@ -107,10 +142,13 @@ public class AppSettings: ObservableObject {
     public func incrementPhotoCount() {
         checkDailyReset()
         photosTakenToday += 1
+        UserDefaults.standard.set(photosTakenToday, forKey: "photosTakenToday")
     }
     
     public func resetPhotoCountForNewRoll() {
         photosTakenToday = 0
         hasSubmittedRollToday = false
+        UserDefaults.standard.set(0, forKey: "photosTakenToday")
+        UserDefaults.standard.set(false, forKey: "hasSubmittedRollToday")
     }
 }
