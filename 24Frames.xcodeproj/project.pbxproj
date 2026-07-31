@@ -33,6 +33,7 @@
 		100000000000000000000025 /* Views/SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000026 /* Views/SettingsView.swift */; };
 		100000000000000000000027 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000028 /* Settings.bundle */; };
 		100000000000000000000028 /* Views/FilmRollButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000029 /* Views/FilmRollButtonView.swift */; };
+		100000000000000000000029 /* Services/OrientationObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000030 /* Services/OrientationObserver.swift */; };
 		100000000000000000000021 /* TwentyFourFramesWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000022 /* TwentyFourFramesWidget.swift */; };
 		100000000000000000000022 /* 24FramesWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 500000000000000000000004 /* 24FramesWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -103,6 +104,7 @@
 		200000000000000000000026 /* Views/SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/SettingsView.swift; sourceTree = "<group>"; };
 		200000000000000000000028 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		200000000000000000000029 /* Views/FilmRollButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/FilmRollButtonView.swift; sourceTree = "<group>"; };
+		200000000000000000000030 /* Services/OrientationObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/OrientationObserver.swift; sourceTree = "<group>"; };
 		200000000000000000000022 /* TwentyFourFramesWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwentyFourFramesWidget.swift; sourceTree = "<group>"; };
 		200000000000000000000023 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		500000000000000000000001 /* 24Frames.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 24Frames.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -171,6 +173,7 @@
 				200000000000000000000026 /* Views/SettingsView.swift */,
 				200000000000000000000028 /* Settings.bundle */,
 				200000000000000000000029 /* Views/FilmRollButtonView.swift */,
+				200000000000000000000030 /* Services/OrientationObserver.swift */,
 				200000000000000000000005 /* Views/CameraPreview.swift */,
 				200000000000000000000006 /* Views/ContentView.swift */,
 				200000000000000000000007 /* Views/PermissionDeniedView.swift */,
@@ -375,6 +378,7 @@
 				100000000000000000000024 /* Services/FilmDevelopManager.swift in Sources */,
 				100000000000000000000025 /* Views/SettingsView.swift in Sources */,
 				100000000000000000000028 /* Views/FilmRollButtonView.swift in Sources */,
+				100000000000000000000029 /* Services/OrientationObserver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

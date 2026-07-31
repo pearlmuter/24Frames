@@ -12,41 +12,43 @@ public enum DevelopmentSpeed: String, CaseIterable, Identifiable, Codable {
 public class AppSettings: ObservableObject {
     public static let shared = AppSettings()
     
-    @AppStorage("isInfinitePicturesMode") public var isInfinitePicturesMode: Bool = false {
-        willSet { objectWillChange.send() }
-    }
-    
-    @AppStorage("isBlackAndWhiteMode") public var isBlackAndWhiteMode: Bool = false {
-        willSet { objectWillChange.send() }
-    }
-    
-    @AppStorage("isDevelopModeEnabled") public var isDevelopModeEnabled: Bool = false {
-        willSet { objectWillChange.send() }
-    }
-    
-    @AppStorage("developmentSpeedRaw") private var developmentSpeedRaw: String = DevelopmentSpeed.immediate.rawValue {
-        willSet { objectWillChange.send() }
-    }
+    @AppStorage("isInfinitePicturesMode") public var isInfinitePicturesMode: Bool = false
+    @AppStorage("isBlackAndWhiteMode") public var isBlackAndWhiteMode: Bool = false
+    @AppStorage("isDevelopModeEnabled") public var isDevelopModeEnabled: Bool = false
+    @AppStorage("developmentSpeedRaw") private var developmentSpeedRaw: String = DevelopmentSpeed.immediate.rawValue
     
     public var developmentSpeed: DevelopmentSpeed {
         get { DevelopmentSpeed(rawValue: developmentSpeedRaw) ?? .immediate }
         set { developmentSpeedRaw = newValue.rawValue }
     }
     
-    @AppStorage("photosTakenToday") public var photosTakenToday: Int = 0 {
-        willSet { objectWillChange.send() }
-    }
+    @AppStorage("photosTakenToday") public var photosTakenToday: Int = 0
+    @AppStorage("hasSubmittedRollToday") public var hasSubmittedRollToday: Bool = false
+    @AppStorage("lastResetDateString") private var lastResetDateString: String = ""
     
-    @AppStorage("hasSubmittedRollToday") public var hasSubmittedRollToday: Bool = false {
-        willSet { objectWillChange.send() }
-    }
-    
-    @AppStorage("lastResetDateString") private var lastResetDateString: String = "" {
-        willSet { objectWillChange.send() }
-    }
+    private var observer: AnyCancellable?
+    private var previousDevelopState: Bool = false
     
     public init() {
+        previousDevelopState = isDevelopModeEnabled
         checkDailyReset()
+        setupUserDefaultsObserver()
+    }
+    
+    private func setupUserDefaultsObserver() {
+        observer = NotificationCenter.default
+            .publisher(for: UserDefaults.didChangeNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.objectWillChange.send()
+                
+                let currentDevelopState = self.isDevelopModeEnabled
+                if self.previousDevelopState == true && currentDevelopState == false {
+                    FilmDevelopManager.shared.flushAllPendingAndActiveRollsToCameraRoll(photoSaver: PhotoSaver())
+                }
+                self.previousDevelopState = currentDevelopState
+            }
     }
     
     public func checkDailyReset() {

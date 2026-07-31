@@ -3,6 +3,7 @@ import SwiftUI
 public struct ContentView: View {
     @StateObject private var cameraManager = CameraManager()
     @StateObject private var volumeObserver = VolumeButtonObserver()
+    @StateObject private var orientationObserver = OrientationObserver()
     @StateObject private var settings = AppSettings.shared
     @StateObject private var filmManager = FilmDevelopManager.shared
     
@@ -44,6 +45,8 @@ public struct ContentView: View {
                                         .foregroundColor(Color(red: 0.95, green: 0.75, blue: 0.1)) // Airport sign / Mustard yellow
                                 }
                             }
+                            .rotationEffect(.degrees(orientationObserver.rotationAngle))
+                            .animation(.easeInOut(duration: 0.3), value: orientationObserver.rotationAngle)
                             
                             Spacer()
                         }
@@ -60,6 +63,8 @@ public struct ContentView: View {
                                         developAlertMessage = "Are you sure? You took \(count) pictures. You can only get one roll of pictures for today."
                                         isShowingDevelopAlert = true
                                     }
+                                    .rotationEffect(.degrees(orientationObserver.rotationAngle))
+                                    .animation(.easeInOut(duration: 0.3), value: orientationObserver.rotationAngle)
                                     .padding(.trailing, 20)
                                 }
                             }
@@ -84,9 +89,11 @@ public struct ContentView: View {
                         
                         Spacer(minLength: 0)
                         
-                        // Bottom Controls Bar (Lowered to bottom edge)
+                        // Bottom Controls Bar (Rotates with device orientation)
                         ZStack {
                             ShutterRingView(isAnimating: $isShutterRingAnimating)
+                                .rotationEffect(.degrees(orientationObserver.rotationAngle))
+                                .animation(.easeInOut(duration: 0.3), value: orientationObserver.rotationAngle)
                             
                             HStack {
                                 Spacer()
@@ -96,6 +103,8 @@ public struct ContentView: View {
                                 }
                                 .disabled(!settings.canTakePhoto)
                                 .opacity(settings.canTakePhoto ? 1.0 : 0.4)
+                                .rotationEffect(.degrees(orientationObserver.rotationAngle))
+                                .animation(.easeInOut(duration: 0.3), value: orientationObserver.rotationAngle)
                                 
                                 Spacer()
                             }
@@ -106,6 +115,8 @@ public struct ContentView: View {
                                         HapticManager.selection()
                                         isShowingPhotoLibrary = true
                                     }
+                                    .rotationEffect(.degrees(orientationObserver.rotationAngle))
+                                    .animation(.easeInOut(duration: 0.3), value: orientationObserver.rotationAngle)
                                     .padding(.leading, 28)
                                 } else {
                                     Spacer()
@@ -117,6 +128,8 @@ public struct ContentView: View {
                                 CameraFlipButtonView {
                                     cameraManager.toggleCamera()
                                 }
+                                .rotationEffect(.degrees(orientationObserver.rotationAngle))
+                                .animation(.easeInOut(duration: 0.3), value: orientationObserver.rotationAngle)
                                 .padding(.trailing, 28)
                             }
                         }

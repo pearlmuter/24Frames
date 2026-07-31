@@ -117,6 +117,25 @@ public class FilmDevelopManager: ObservableObject {
         }
     }
     
+    public func flushAllPendingAndActiveRollsToCameraRoll(photoSaver: PhotoSaver) {
+        let activeFiles = (try? fileManager.contentsOfDirectory(atPath: activeRollDirectory.path)) ?? []
+        let activePhotos = activeFiles.filter { $0.hasSuffix(".heic") || $0.hasSuffix(".jpg") }
+        exportPhotosToLibrary(activePhotos, from: activeRollDirectory, photoSaver: photoSaver)
+        
+        let contents = (try? fileManager.contentsOfDirectory(atPath: pendingDirectory.path)) ?? []
+        for dirName in contents {
+            if dirName == "ActiveRoll" { continue }
+            let rollDir = pendingDirectory.appendingPathComponent(dirName)
+            let rollFiles = (try? fileManager.contentsOfDirectory(atPath: rollDir.path)) ?? []
+            let photoFiles = rollFiles.filter { $0.hasSuffix(".heic") || $0.hasSuffix(".jpg") }
+            exportPhotosToLibrary(photoFiles, from: rollDir, photoSaver: photoSaver)
+            try? fileManager.removeItem(at: rollDir)
+        }
+        
+        refreshActiveCount()
+        updateNextDevelopCountdown()
+    }
+    
     public func sendRollToDevelop(speed: DevelopmentSpeed, photoSaver: PhotoSaver, completion: @escaping (Int) -> Void) {
         let files = (try? fileManager.contentsOfDirectory(atPath: activeRollDirectory.path)) ?? []
         let photoFiles = files.filter { $0.hasSuffix(".heic") || $0.hasSuffix(".jpg") }
