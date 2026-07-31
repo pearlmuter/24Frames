@@ -28,32 +28,34 @@ public class VolumeButtonObserver: ObservableObject {
     public init() {}
     
     public func startListening() {
-        let audioSession = AVAudioSession.sharedInstance()
-        do {
-            try audioSession.setCategory(.playback, options: [.mixWithOthers])
-            try audioSession.setActive(true)
-        } catch {
-            print("VolumeButtonObserver error setting audio session: \(error)")
-        }
-        
-        DispatchQueue.main.async {
-            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-               let window = windowScene.windows.first {
-                if !window.subviews.contains(self.volumeView) {
-                    window.addSubview(self.volumeView)
-                }
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            let audioSession = AVAudioSession.sharedInstance()
+            do {
+                try audioSession.setCategory(.playback, options: [.mixWithOthers])
+                try audioSession.setActive(true)
+            } catch {
+                print("VolumeButtonObserver error setting audio session: \(error)")
             }
-        }
-        
-        lastVolume = audioSession.outputVolume
-        
-        // Single KVO observer to prevent duplicate volume button callbacks
-        observation = audioSession.observe(\.outputVolume, options: [.new]) { [weak self] session, change in
-            guard let self = self, let newVolume = change.newValue else { return }
-            if abs(newVolume - self.lastVolume) > 0.001 {
-                self.lastVolume = newVolume
-                DispatchQueue.main.async {
-                    self.onVolumeButtonTap?()
+            
+            DispatchQueue.main.async {
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let window = windowScene.windows.first {
+                    if !window.subviews.contains(self.volumeView) {
+                        window.addSubview(self.volumeView)
+                    }
+                }
+                
+                self.lastVolume = audioSession.outputVolume
+                
+                self.observation = audioSession.observe(\.outputVolume, options: [.new]) { [weak self] _, change in
+                    guard let self = self, let newVolume = change.newValue else { return }
+                    if abs(newVolume - self.lastVolume) > 0.001 {
+                        self.lastVolume = newVolume
+                        DispatchQueue.main.async {
+                            self.onVolumeButtonTap?()
+                        }
+                    }
                 }
             }
         }
