@@ -7,6 +7,14 @@ public struct HapticManager {
         generator.impactOccurred()
     }
     
+    public static func shutter() {
+        impact(style: .medium)
+    }
+    
+    public static func medium() {
+        impact(style: .medium)
+    }
+    
     public static func selection() {
         let generator = UISelectionFeedbackGenerator()
         generator.prepare()

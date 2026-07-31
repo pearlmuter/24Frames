@@ -2,6 +2,7 @@ import Foundation
 import AVFoundation
 import SwiftUI
 import Combine
+import CoreImage
 
 public enum CameraPermissionState {
     case notDetermined
@@ -24,6 +25,7 @@ public class CameraManager: NSObject, ObservableObject {
     private var videoDeviceInput: AVCaptureDeviceInput?
     private let sessionQueue = DispatchQueue(label: "com.24frames.cameraSessionQueue")
     private let photoSaver: PhotoSaver
+    private let ciContext = CIContext(options: nil)
     
     public var onPhotoCaptured: (() -> Void)?
     
@@ -85,23 +87,37 @@ public class CameraManager: NSObject, ObservableObject {
                 if self.captureSession.canAddInput(videoInput) {
                     self.captureSession.addInput(videoInput)
                     self.videoDeviceInput = videoInput
+                } else {
+                    DispatchQueue.main.async {
+                        self.errorMessage = "Cannot add Primary Wide camera input."
+                    }
+                    self.captureSession.commitConfiguration()
+                    return
                 }
             } catch {
                 DispatchQueue.main.async {
-                    self.errorMessage = "Unable to create video input: \(error.localizedDescription)"
+                    self.errorMessage = "Failed to create video device input: \(error.localizedDescription)"
                 }
                 self.captureSession.commitConfiguration()
                 return
             }
             
-            if self.captureSession.canAddOutput(self.photoOutput) {
-                self.captureSession.addOutput(self.photoOutput)
-                
-                // Disable auto deferred photo delivery if supported on hardware (iOS 17+)
-                if #available(iOS 17.0, *) {
-                    if self.photoOutput.isAutoDeferredPhotoDeliverySupported {
-                        self.photoOutput.isAutoDeferredPhotoDeliveryEnabled = false
+            if !self.captureSession.outputs.contains(self.photoOutput) {
+                if self.captureSession.canAddOutput(self.photoOutput) {
+                    self.captureSession.addOutput(self.photoOutput)
+                    
+                    self.photoOutput.isHighResolutionCaptureEnabled = true
+                    self.photoOutput.maxPhotoQualityPrioritization = .speed
+                    
+                    if self.photoOutput.availablePhotoCodecTypes.contains(.hevc) {
+                        // HEVC codec
                     }
+                } else {
+                    DispatchQueue.main.async {
+                        self.errorMessage = "Cannot add photo output to capture session."
+                    }
+                    self.captureSession.commitConfiguration()
+                    return
                 }
             }
             
@@ -111,61 +127,66 @@ public class CameraManager: NSObject, ObservableObject {
     }
     
     public func toggleCamera() {
-        HapticManager.impact(style: .light)
         cameraPosition = (cameraPosition == .back) ? .front : .back
         configureSession()
     }
     
     public func startSession() {
         sessionQueue.async { [weak self] in
-            guard let self = self, !self.captureSession.isRunning else { return }
-            self.captureSession.startRunning()
-            DispatchQueue.main.async {
-                self.isSessionRunning = self.captureSession.isRunning
+            guard let self = self else { return }
+            if !self.captureSession.isRunning {
+                self.captureSession.startRunning()
+                DispatchQueue.main.async {
+                    self.isSessionRunning = self.captureSession.isRunning
+                }
             }
         }
     }
     
     public func stopSession() {
         sessionQueue.async { [weak self] in
-            guard let self = self, self.captureSession.isRunning else { return }
-            self.captureSession.stopRunning()
-            DispatchQueue.main.async {
-                self.isSessionRunning = self.captureSession.isRunning
+            guard let self = self else { return }
+            if self.captureSession.isRunning {
+                self.captureSession.stopRunning()
+                DispatchQueue.main.async {
+                    self.isSessionRunning = self.captureSession.isRunning
+                }
             }
         }
     }
     
     public func capturePhoto() {
-        HapticManager.impact(style: .medium)
+        guard AppSettings.shared.canTakePhoto else {
+            DispatchQueue.main.async {
+                self.errorMessage = "Daily photo limit reached (24 photos max per day)."
+            }
+            return
+        }
+        
         sessionQueue.async { [weak self] in
             guard let self = self else { return }
             
-            // Build photo settings specifying HEIC format where supported
-            var photoSettings = AVCapturePhotoSettings()
+            var photoSettings: AVCapturePhotoSettings
             if self.photoOutput.availablePhotoCodecTypes.contains(.hevc) {
                 photoSettings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.hevc])
+            } else {
+                photoSettings = AVCapturePhotoSettings()
             }
             
-            // Explicitly disable AI computational options to guarantee Base Capture
-            if self.photoOutput.isAutoRedEyeReductionSupported {
-                photoSettings.isAutoRedEyeReductionEnabled = false
-            }
+            photoSettings.photoQualityPrioritization = .speed
+            photoSettings.isHighResolutionPhotoEnabled = true
             
-            // Dynamic landscape / portrait video orientation handling and un-mirrored photo output
             if let connection = self.photoOutput.connection(with: .video) {
                 if connection.isVideoOrientationSupported {
-                    let deviceOrientation = UIDevice.current.orientation
+                    let currentOrientation = UIDevice.current.orientation
                     let videoOrientation: AVCaptureVideoOrientation
-                    switch deviceOrientation {
-                    case .portrait:
-                        videoOrientation = .portrait
-                    case .portraitUpsideDown:
-                        videoOrientation = .portraitUpsideDown
+                    switch currentOrientation {
                     case .landscapeLeft:
                         videoOrientation = .landscapeRight
                     case .landscapeRight:
                         videoOrientation = .landscapeLeft
+                    case .portraitUpsideDown:
+                        videoOrientation = .portraitUpsideDown
                     default:
                         videoOrientation = .portrait
                     }
@@ -173,29 +194,42 @@ public class CameraManager: NSObject, ObservableObject {
                 }
                 
                 if connection.isVideoMirroringSupported {
-                    connection.automaticallyAdjustsVideoMirroring = false
                     connection.isVideoMirrored = (self.cameraPosition == .front)
                 }
             }
             
             DispatchQueue.main.async {
                 self.isCapturing = true
-                self.onPhotoCaptured?()
+                AppSettings.shared.incrementPhotoCount()
+                HapticManager.shutter()
             }
             
             self.photoOutput.capturePhoto(with: photoSettings, delegate: self)
         }
     }
     
-    public func setFocusAndExposure(at point: CGPoint, in viewBounds: CGSize) {
+    private func processImageData(_ rawData: Data) -> Data {
+        guard AppSettings.shared.isBlackAndWhiteMode,
+              let ciImage = CIImage(data: rawData) else {
+            return rawData
+        }
+        
+        let filter = CIFilter(name: "CIPhotoEffectMono")
+        filter?.setValue(ciImage, forKey: kCIInputImageKey)
+        
+        guard let outputImage = filter?.outputImage,
+              let cgImage = ciContext.createCGImage(outputImage, from: outputImage.extent) else {
+            return rawData
+        }
+        
+        let uiImage = UIImage(cgImage: cgImage, scale: 1.0, orientation: .up)
+        return uiImage.jpegData(compressionQuality: 0.95) ?? rawData
+    }
+    
+    public func focus(at point: CGPoint) {
         sessionQueue.async { [weak self] in
             guard let device = self?.videoDeviceInput?.device else { return }
-            
-            // Translate view point to normalized camera point (0,0 top-left to 1,1 bottom-right)
-            let normalizedPoint = CGPoint(
-                x: point.y / viewBounds.height,
-                y: 1.0 - (point.x / viewBounds.width)
-            )
+            let normalizedPoint = CGPoint(x: point.y, y: 1.0 - point.x)
             
             do {
                 try device.lockForConfiguration()
@@ -234,28 +268,35 @@ extension CameraManager: AVCapturePhotoCaptureDelegate {
             return
         }
         
-        guard let fileData = photo.fileDataRepresentation() else {
+        guard let rawFileData = photo.fileDataRepresentation() else {
             DispatchQueue.main.async {
                 self.errorMessage = "Failed to obtain photo file data representation."
             }
             return
         }
         
+        let fileData = processImageData(rawFileData)
+        
         DispatchQueue.main.async {
             self.lastCapturedPhotoData = fileData
             if let image = UIImage(data: fileData) {
                 self.latestCapturedImage = image
                 self.lastSavedThumbnail = image
+                self.onPhotoCaptured?()
             }
         }
         
-        photoSaver.savePhotoData(fileData) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success:
-                    break
-                case .failure(let error):
-                    self?.errorMessage = "Failed to save photo: \(error)"
+        if AppSettings.shared.isDevelopModeEnabled {
+            FilmDevelopManager.shared.savePhotoToActiveRoll(data: fileData)
+        } else {
+            photoSaver.savePhotoData(fileData) { [weak self] result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success:
+                        break
+                    case .failure(let error):
+                        self?.errorMessage = "Failed to save photo: \(error)"
+                    }
                 }
             }
         }

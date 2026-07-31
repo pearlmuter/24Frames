@@ -16,6 +16,11 @@
 		100000000000000000000007 /* Views/PermissionDeniedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000007 /* Views/PermissionDeniedView.swift */; };
 		100000000000000000000008 /* Views/ShutterButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000008 /* Views/ShutterButtonView.swift */; };
 		100000000000000000000009 /* Views/ShutterRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000009 /* Views/ShutterRingView.swift */; };
+		100000000000000000000010 /* CameraManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000010 /* CameraManagerTests.swift */; };
+		100000000000000000000011 /* PhotoSaverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000011 /* PhotoSaverTests.swift */; };
+		100000000000000000000026 /* AppSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000027 /* AppSettingsTests.swift */; };
+		100000000000000000000012 /* 24FramesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000012 /* 24FramesUITests.swift */; };
+		100000000000000000000013 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000014 /* Assets.xcassets */; };
 		100000000000000000000014 /* Views/CameraFlipButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000015 /* Views/CameraFlipButtonView.swift */; };
 		100000000000000000000015 /* Views/FlyToCornerAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000016 /* Views/FlyToCornerAnimationView.swift */; };
 		100000000000000000000016 /* Services/HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000017 /* Services/HapticManager.swift */; };
@@ -23,12 +28,11 @@
 		100000000000000000000018 /* Views/RecentPhotoThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000019 /* Views/RecentPhotoThumbnailView.swift */; };
 		100000000000000000000019 /* Services/VolumeButtonObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000020 /* Services/VolumeButtonObserver.swift */; };
 		100000000000000000000020 /* Services/CameraControlIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000021 /* Services/CameraControlIntent.swift */; };
+		100000000000000000000023 /* Services/AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000024 /* Services/AppSettings.swift */; };
+		100000000000000000000024 /* Services/FilmDevelopManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000025 /* Services/FilmDevelopManager.swift */; };
+		100000000000000000000025 /* Views/SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000026 /* Views/SettingsView.swift */; };
 		100000000000000000000021 /* TwentyFourFramesWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000022 /* TwentyFourFramesWidget.swift */; };
-		100000000000000000000022 /* 24FramesWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 500000000000000000000004 /* 24FramesWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		100000000000000000000010 /* CameraManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000010 /* CameraManagerTests.swift */; };
-		100000000000000000000011 /* PhotoSaverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000011 /* PhotoSaverTests.swift */; };
-		100000000000000000000012 /* 24FramesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000012 /* 24FramesUITests.swift */; };
-		100000000000000000000013 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000014 /* Assets.xcassets */; };
+		100000000000000000000022 /* 24FramesWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 500000000000000000000004 /* 24FramesWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,15 +60,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		C00000000000000000000001 /* Embed App Extensions */ = {
+		C00000000000000000000001 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				100000000000000000000022 /* 24FramesWidgetExtension.appex in Embed App Extensions */,
+				100000000000000000000022 /* 24FramesWidgetExtension.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -79,6 +83,12 @@
 		200000000000000000000007 /* Views/PermissionDeniedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/PermissionDeniedView.swift; sourceTree = "<group>"; };
 		200000000000000000000008 /* Views/ShutterButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/ShutterButtonView.swift; sourceTree = "<group>"; };
 		200000000000000000000009 /* Views/ShutterRingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/ShutterRingView.swift; sourceTree = "<group>"; };
+		200000000000000000000010 /* CameraManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManagerTests.swift; sourceTree = "<group>"; };
+		200000000000000000000011 /* PhotoSaverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSaverTests.swift; sourceTree = "<group>"; };
+		200000000000000000000027 /* AppSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsTests.swift; sourceTree = "<group>"; };
+		200000000000000000000012 /* 24FramesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 24FramesUITests.swift; sourceTree = "<group>"; };
+		200000000000000000000013 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		200000000000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		200000000000000000000015 /* Views/CameraFlipButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/CameraFlipButtonView.swift; sourceTree = "<group>"; };
 		200000000000000000000016 /* Views/FlyToCornerAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/FlyToCornerAnimationView.swift; sourceTree = "<group>"; };
 		200000000000000000000017 /* Services/HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/HapticManager.swift; sourceTree = "<group>"; };
@@ -86,13 +96,11 @@
 		200000000000000000000019 /* Views/RecentPhotoThumbnailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/RecentPhotoThumbnailView.swift; sourceTree = "<group>"; };
 		200000000000000000000020 /* Services/VolumeButtonObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/VolumeButtonObserver.swift; sourceTree = "<group>"; };
 		200000000000000000000021 /* Services/CameraControlIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/CameraControlIntent.swift; sourceTree = "<group>"; };
+		200000000000000000000024 /* Services/AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/AppSettings.swift; sourceTree = "<group>"; };
+		200000000000000000000025 /* Services/FilmDevelopManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/FilmDevelopManager.swift; sourceTree = "<group>"; };
+		200000000000000000000026 /* Views/SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/SettingsView.swift; sourceTree = "<group>"; };
 		200000000000000000000022 /* TwentyFourFramesWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwentyFourFramesWidget.swift; sourceTree = "<group>"; };
 		200000000000000000000023 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		200000000000000000000010 /* CameraManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManagerTests.swift; sourceTree = "<group>"; };
-		200000000000000000000011 /* PhotoSaverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSaverTests.swift; sourceTree = "<group>"; };
-		200000000000000000000012 /* 24FramesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 24FramesUITests.swift; sourceTree = "<group>"; };
-		200000000000000000000013 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		200000000000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		500000000000000000000001 /* 24Frames.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 24Frames.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		500000000000000000000002 /* 24FramesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 24FramesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		500000000000000000000003 /* 24FramesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = 24FramesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -154,6 +162,9 @@
 				200000000000000000000017 /* Services/HapticManager.swift */,
 				200000000000000000000020 /* Services/VolumeButtonObserver.swift */,
 				200000000000000000000021 /* Services/CameraControlIntent.swift */,
+				200000000000000000000024 /* Services/AppSettings.swift */,
+				200000000000000000000025 /* Services/FilmDevelopManager.swift */,
+				200000000000000000000026 /* Views/SettingsView.swift */,
 				200000000000000000000005 /* Views/CameraPreview.swift */,
 				200000000000000000000006 /* Views/ContentView.swift */,
 				200000000000000000000007 /* Views/PermissionDeniedView.swift */,
@@ -167,20 +178,12 @@
 			path = 24Frames;
 			sourceTree = "<group>";
 		};
-		700000000000000000000006 /* 24FramesWidget */ = {
-			isa = PBXGroup;
-			children = (
-				200000000000000000000022 /* TwentyFourFramesWidget.swift */,
-				200000000000000000000023 /* Info.plist */,
-			);
-			path = 24FramesWidget;
-			sourceTree = "<group>";
-		};
 		700000000000000000000003 /* 24FramesTests */ = {
 			isa = PBXGroup;
 			children = (
 				200000000000000000000010 /* CameraManagerTests.swift */,
 				200000000000000000000011 /* PhotoSaverTests.swift */,
+				200000000000000000000027 /* AppSettingsTests.swift */,
 			);
 			path = 24FramesTests;
 			sourceTree = "<group>";
@@ -204,6 +207,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		700000000000000000000006 /* 24FramesWidget */ = {
+			isa = PBXGroup;
+			children = (
+				200000000000000000000022 /* TwentyFourFramesWidget.swift */,
+				200000000000000000000023 /* Info.plist */,
+			);
+			path = 24FramesWidget;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -214,7 +226,7 @@
 				800000000000000000000001 /* Sources */,
 				600000000000000000000001 /* Frameworks */,
 				800000000000000000000004 /* Resources */,
-				C00000000000000000000001 /* Embed App Extensions */,
+				C00000000000000000000001 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -225,22 +237,6 @@
 			productName = 24Frames;
 			productReference = 500000000000000000000001 /* 24Frames.app */;
 			productType = "com.apple.product-type.application";
-		};
-		400000000000000000000004 /* 24FramesWidgetExtension */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 900000000000000000000004 /* Build configuration list for PBXNativeTarget "24FramesWidgetExtension" */;
-			buildPhases = (
-				800000000000000000000005 /* Sources */,
-				600000000000000000000004 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = 24FramesWidgetExtension;
-			productName = 24FramesWidgetExtension;
-			productReference = 500000000000000000000004 /* 24FramesWidgetExtension.appex */;
-			productType = "com.apple.product-type.app-extension";
 		};
 		400000000000000000000002 /* 24FramesTests */ = {
 			isa = PBXNativeTarget;
@@ -276,6 +272,22 @@
 			productReference = 500000000000000000000003 /* 24FramesUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		400000000000000000000004 /* 24FramesWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 900000000000000000000004 /* Build configuration list for PBXNativeTarget "24FramesWidgetExtension" */;
+			buildPhases = (
+				800000000000000000000005 /* Sources */,
+				600000000000000000000004 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = 24FramesWidgetExtension;
+			productName = 24FramesWidgetExtension;
+			productReference = 500000000000000000000004 /* 24FramesWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -284,7 +296,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1600;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					400000000000000000000001 = {
 						CreatedOnToolsVersion = 13.0;
@@ -320,6 +332,17 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		800000000000000000000004 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				100000000000000000000013 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		800000000000000000000001 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -341,6 +364,9 @@
 				100000000000000000000018 /* Views/RecentPhotoThumbnailView.swift in Sources */,
 				100000000000000000000019 /* Services/VolumeButtonObserver.swift in Sources */,
 				100000000000000000000020 /* Services/CameraControlIntent.swift in Sources */,
+				100000000000000000000023 /* Services/AppSettings.swift in Sources */,
+				100000000000000000000024 /* Services/FilmDevelopManager.swift in Sources */,
+				100000000000000000000025 /* Views/SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,6 +376,7 @@
 			files = (
 				100000000000000000000010 /* CameraManagerTests.swift in Sources */,
 				100000000000000000000011 /* PhotoSaverTests.swift in Sources */,
+				100000000000000000000026 /* AppSettingsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,22 +392,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				100000000000000000000021 /* 24FramesWidget/TwentyFourFramesWidget.swift in Sources */,
+				100000000000000000000021 /* TwentyFourFramesWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXResourcesBuildPhase section */
-		800000000000000000000004 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				100000000000000000000013 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
 		B000000000000000000000001 /* PBXTargetDependency */ = {
@@ -407,6 +423,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3FY4D2C459;
@@ -433,6 +450,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3FY4D2C459;
@@ -459,6 +477,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -474,6 +493,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -488,6 +508,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -502,6 +523,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -516,8 +538,38 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -527,8 +579,37 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -538,10 +619,11 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 3FY4D2C459;
-				INFOPLIST_FILE = "24FramesWidget/Info.plist";
+				INFOPLIST_FILE = 24FramesWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pearlmuter.24Frames.24FramesWidgetExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -556,9 +638,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3FY4D2C459;
-				INFOPLIST_FILE = "24FramesWidget/Info.plist";
+				INFOPLIST_FILE = 24FramesWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pearlmuter.24Frames.24FramesWidgetExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
