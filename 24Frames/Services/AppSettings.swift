@@ -12,9 +12,30 @@ public enum DevelopmentSpeed: String, CaseIterable, Identifiable, Codable {
 public class AppSettings: ObservableObject {
     public static let shared = AppSettings()
     
-    @AppStorage("isInfinitePicturesMode") public var isInfinitePicturesMode: Bool = false
-    @AppStorage("isBlackAndWhiteMode") public var isBlackAndWhiteMode: Bool = false
-    @AppStorage("isDevelopModeEnabled") public var isDevelopModeEnabled: Bool = false
+    public var isInfinitePicturesMode: Bool {
+        get { UserDefaults.standard.bool(forKey: "isInfinitePicturesMode") }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "isInfinitePicturesMode")
+            objectWillChange.send()
+        }
+    }
+    
+    public var isBlackAndWhiteMode: Bool {
+        get { UserDefaults.standard.bool(forKey: "isBlackAndWhiteMode") }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "isBlackAndWhiteMode")
+            objectWillChange.send()
+        }
+    }
+    
+    public var isDevelopModeEnabled: Bool {
+        get { UserDefaults.standard.bool(forKey: "isDevelopModeEnabled") }
+        set {
+            UserDefaults.standard.set(newValue, forKey: "isDevelopModeEnabled")
+            objectWillChange.send()
+        }
+    }
+    
     @AppStorage("developmentSpeedRaw") public var developmentSpeedRaw: String = DevelopmentSpeed.immediate.rawValue
     
     public var developmentSpeed: DevelopmentSpeed {
@@ -35,11 +56,9 @@ public class AppSettings: ObservableObject {
     
     private var observer: AnyCancellable?
     private var previousDevelopState: Bool = false
-    private var previousSpeedState: String = DevelopmentSpeed.immediate.rawValue
     
     public init() {
         previousDevelopState = isDevelopModeEnabled
-        previousSpeedState = developmentSpeedRaw
         checkDailyReset()
         setupUserDefaultsObserver()
     }
