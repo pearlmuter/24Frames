@@ -6,7 +6,7 @@ struct LandscapeRotationModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .rotationEffect(.degrees(angle))
-            .animation(.easeInOut(duration: 0.3), value: angle)
+            .animation(.easeInOut(duration: 0.25), value: angle)
     }
 }
 
@@ -32,7 +32,8 @@ public struct ContentView: View {
     
     public var body: some View {
         GeometryReader { geometry in
-            let isLandscape = orientationObserver.orientation == .landscapeLeft || orientationObserver.orientation == .landscapeRight
+            let screenWidth = geometry.size.width
+            let previewHeight = screenWidth * (4.0 / 3.0)
             
             ZStack {
                 Color.black.edgesIgnoringSafeArea(.all)
@@ -44,28 +45,29 @@ public struct ContentView: View {
                 
                 switch cameraManager.permissionState {
                 case .authorized:
-                    if isLandscape {
-                        // Landscape Side-by-Side Layout
-                        let previewWidth = geometry.size.height * (3.0 / 4.0)
-                        
-                        HStack(spacing: 0) {
-                            // Left Sidebar: Countdown Number & Film Roll Button
-                            VStack(spacing: 16) {
-                                Spacer()
+                    VStack(spacing: 0) {
+                        // Top Header Bar with Countdown & Optional Mustard Yellow Infinity Symbol & Film Roll Icon
+                        HStack {
+                            Spacer()
+                            
+                            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                                Text("\(settings.remainingPhotosToday)")
+                                    .font(.system(size: 48, weight: .black, design: .monospaced))
+                                    .foregroundColor(.white)
                                 
-                                HStack(alignment: .firstTextBaseline, spacing: 6) {
-                                    Text("\(settings.remainingPhotosToday)")
-                                        .font(.system(size: 44, weight: .black, design: .monospaced))
-                                        .foregroundColor(.white)
-                                    
-                                    if settings.isInfinitePicturesMode {
-                                        Text("∞")
-                                            .font(.system(size: 28, weight: .bold))
-                                            .foregroundColor(Color(red: 0.95, green: 0.75, blue: 0.1))
-                                    }
+                                if settings.isInfinitePicturesMode {
+                                    Text("∞")
+                                        .font(.system(size: 32, weight: .bold))
+                                        .foregroundColor(Color(red: 0.95, green: 0.75, blue: 0.1)) // Airport sign / Mustard yellow
                                 }
-                                .landscapeRotation(orientationObserver.rotationAngle)
-                                
+                            }
+                            .landscapeRotation(orientationObserver.rotationAngle)
+                            
+                            Spacer()
+                        }
+                        .overlay(
+                            HStack {
+                                Spacer()
                                 if settings.isDevelopModeEnabled {
                                     FilmRollButtonView(
                                         rollCount: filmManager.activeRollPhotoCount,
@@ -77,171 +79,71 @@ public struct ContentView: View {
                                         isShowingDevelopAlert = true
                                     }
                                     .landscapeRotation(orientationObserver.rotationAngle)
+                                    .padding(.trailing, 20)
                                 }
+                            }
+                        )
+                        .padding(.top, 8)
+                        .padding(.bottom, 6)
+                        
+                        // 4:3 Aspect Ratio Camera View Finder (Strict 375x500 on iPhone 13 mini)
+                        ZStack {
+                            CameraPreview(cameraManager: cameraManager)
+                                .grayscale(settings.isBlackAndWhiteMode ? 1.0 : 0.0)
+                                .frame(width: screenWidth, height: previewHeight)
+                                .clipped()
+                            
+                            if let capturedImage = cameraManager.latestCapturedImage {
+                                FlyToCornerAnimationView(image: capturedImage) {
+                                    cameraManager.latestCapturedImage = nil
+                                }
+                                .frame(width: screenWidth, height: previewHeight)
+                            }
+                        }
+                        
+                        Spacer(minLength: 0)
+                        
+                        // Bottom Controls Bar (UI buttons rotate in-place 90° / -90° / 180° with zero lag)
+                        ZStack {
+                            ShutterRingView(isAnimating: $isShutterRingAnimating)
+                                .landscapeRotation(orientationObserver.rotationAngle)
+                            
+                            HStack {
+                                Spacer()
+                                
+                                ShutterButtonView {
+                                    triggerShutter()
+                                }
+                                .disabled(!settings.canTakePhoto)
+                                .opacity(settings.canTakePhoto ? 1.0 : 0.4)
+                                .landscapeRotation(orientationObserver.rotationAngle)
                                 
                                 Spacer()
                             }
-                            .frame(width: max(80, (geometry.size.width - previewWidth) / 2))
                             
-                            Spacer(minLength: 0)
-                            
-                            // Center: 4:3 Camera Viewfinder
-                            ZStack {
-                                CameraPreview(cameraManager: cameraManager)
-                                    .grayscale(settings.isBlackAndWhiteMode ? 1.0 : 0.0)
-                                    .frame(width: previewWidth, height: geometry.size.height)
-                                    .clipped()
-                                
-                                if let capturedImage = cameraManager.latestCapturedImage {
-                                    FlyToCornerAnimationView(image: capturedImage) {
-                                        cameraManager.latestCapturedImage = nil
-                                    }
-                                    .frame(width: previewWidth, height: geometry.size.height)
-                                }
-                            }
-                            
-                            Spacer(minLength: 0)
-                            
-                            // Right Sidebar: Vertical Shutter Controls
-                            VStack(spacing: 24) {
-                                Spacer()
-                                
+                            HStack {
                                 if !settings.isDevelopModeEnabled {
                                     RecentPhotoThumbnailView(image: cameraManager.lastSavedThumbnail) {
                                         HapticManager.selection()
                                         isShowingPhotoLibrary = true
                                     }
                                     .landscapeRotation(orientationObserver.rotationAngle)
+                                    .padding(.leading, 28)
                                 } else {
-                                    Spacer().frame(height: 48)
+                                    Spacer()
+                                        .frame(width: 48)
                                 }
                                 
-                                ZStack {
-                                    ShutterRingView(isAnimating: $isShutterRingAnimating)
-                                        .landscapeRotation(orientationObserver.rotationAngle)
-                                    
-                                    ShutterButtonView {
-                                        triggerShutter()
-                                    }
-                                    .disabled(!settings.canTakePhoto)
-                                    .opacity(settings.canTakePhoto ? 1.0 : 0.4)
-                                    .landscapeRotation(orientationObserver.rotationAngle)
-                                }
+                                Spacer()
                                 
                                 CameraFlipButtonView {
                                     cameraManager.toggleCamera()
                                 }
                                 .landscapeRotation(orientationObserver.rotationAngle)
-                                
-                                Spacer()
+                                .padding(.trailing, 28)
                             }
-                            .frame(width: max(80, (geometry.size.width - previewWidth) / 2))
                         }
-                    } else {
-                        // Portrait Stacked Layout
-                        let screenWidth = geometry.size.width
-                        let previewHeight = screenWidth * (4.0 / 3.0)
-                        
-                        VStack(spacing: 0) {
-                            // Top Header Bar with Countdown & Optional Mustard Yellow Infinity Symbol & Film Roll Icon
-                            HStack {
-                                Spacer()
-                                
-                                HStack(alignment: .firstTextBaseline, spacing: 6) {
-                                    Text("\(settings.remainingPhotosToday)")
-                                        .font(.system(size: 48, weight: .black, design: .monospaced))
-                                        .foregroundColor(.white)
-                                    
-                                    if settings.isInfinitePicturesMode {
-                                        Text("∞")
-                                            .font(.system(size: 32, weight: .bold))
-                                            .foregroundColor(Color(red: 0.95, green: 0.75, blue: 0.1)) // Airport sign / Mustard yellow
-                                    }
-                                }
-                                .landscapeRotation(orientationObserver.rotationAngle)
-                                
-                                Spacer()
-                            }
-                            .overlay(
-                                HStack {
-                                    Spacer()
-                                    if settings.isDevelopModeEnabled {
-                                        FilmRollButtonView(
-                                            rollCount: filmManager.activeRollPhotoCount,
-                                            countdownString: filmManager.nextDevelopCountdownString
-                                        ) {
-                                            HapticManager.medium()
-                                            let count = filmManager.activeRollPhotoCount
-                                            developAlertMessage = "Are you sure? You took \(count) pictures. You can only get one roll of pictures for today."
-                                            isShowingDevelopAlert = true
-                                        }
-                                        .landscapeRotation(orientationObserver.rotationAngle)
-                                        .padding(.trailing, 20)
-                                    }
-                                }
-                            )
-                            .padding(.top, 8)
-                            .padding(.bottom, 6)
-                            
-                            // 4:3 Aspect Ratio Camera View Finder
-                            ZStack {
-                                CameraPreview(cameraManager: cameraManager)
-                                    .grayscale(settings.isBlackAndWhiteMode ? 1.0 : 0.0)
-                                    .frame(width: screenWidth, height: previewHeight)
-                                    .clipped()
-                                
-                                if let capturedImage = cameraManager.latestCapturedImage {
-                                    FlyToCornerAnimationView(image: capturedImage) {
-                                        cameraManager.latestCapturedImage = nil
-                                    }
-                                    .frame(width: screenWidth, height: previewHeight)
-                                }
-                            }
-                            
-                            Spacer(minLength: 0)
-                            
-                            // Bottom Controls Bar
-                            ZStack {
-                                ShutterRingView(isAnimating: $isShutterRingAnimating)
-                                    .landscapeRotation(orientationObserver.rotationAngle)
-                                
-                                HStack {
-                                    Spacer()
-                                    
-                                    ShutterButtonView {
-                                        triggerShutter()
-                                    }
-                                    .disabled(!settings.canTakePhoto)
-                                    .opacity(settings.canTakePhoto ? 1.0 : 0.4)
-                                    .landscapeRotation(orientationObserver.rotationAngle)
-                                    
-                                    Spacer()
-                                }
-                                
-                                HStack {
-                                    if !settings.isDevelopModeEnabled {
-                                        RecentPhotoThumbnailView(image: cameraManager.lastSavedThumbnail) {
-                                            HapticManager.selection()
-                                            isShowingPhotoLibrary = true
-                                        }
-                                        .landscapeRotation(orientationObserver.rotationAngle)
-                                        .padding(.leading, 28)
-                                    } else {
-                                        Spacer()
-                                            .frame(width: 48)
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    CameraFlipButtonView {
-                                        cameraManager.toggleCamera()
-                                    }
-                                    .landscapeRotation(orientationObserver.rotationAngle)
-                                    .padding(.trailing, 28)
-                                }
-                            }
-                            .padding(.bottom, 16)
-                        }
+                        .padding(.bottom, 16)
                     }
                 case .denied:
                     PermissionDeniedView()
