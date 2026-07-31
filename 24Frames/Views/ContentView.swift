@@ -14,98 +14,104 @@ public struct ContentView: View {
     public init() {}
     
     public var body: some View {
-        ZStack {
-            Color.black.edgesIgnoringSafeArea(.all)
+        GeometryReader { geometry in
+            let screenWidth = geometry.size.width
+            let previewHeight = screenWidth * (4.0 / 3.0)
             
-            // Hidden volume view to suppress system volume slider HUD
-            VolumeViewHidden()
-                .frame(width: 0, height: 0)
-                .opacity(0)
-            
-            switch cameraManager.permissionState {
-            case .authorized:
-                VStack(spacing: 0) {
-                    // Top Header Bar with Countdown & Optional Film Roll Icon
-                    HStack {
-                        Spacer()
-                        
-                        Text(settings.isInfinitePicturesMode ? "∞" : "\(settings.remainingPhotosToday)")
-                            .font(.system(size: 52, weight: .black, design: .monospaced))
-                            .foregroundColor(.white)
-                        
-                        Spacer()
-                    }
-                    .overlay(
+            ZStack {
+                Color.black.edgesIgnoringSafeArea(.all)
+                
+                // Hidden volume view to suppress system volume slider HUD
+                VolumeViewHidden()
+                    .frame(width: 0, height: 0)
+                    .opacity(0)
+                
+                switch cameraManager.permissionState {
+                case .authorized:
+                    VStack(spacing: 0) {
+                        // Top Header Bar with Countdown & Optional Film Roll Icon
                         HStack {
                             Spacer()
-                            if settings.isDevelopModeEnabled {
-                                FilmRollButtonView(rollCount: filmManager.activeRollPhotoCount) {
-                                    HapticManager.medium()
-                                    let count = filmManager.activeRollPhotoCount
-                                    developAlertMessage = "Are you sure? You took \(count) pictures. You can only get one roll of pictures for today."
-                                    isShowingDevelopAlert = true
+                            
+                            Text(settings.isInfinitePicturesMode ? "∞" : "\(settings.remainingPhotosToday)")
+                                .font(.system(size: 48, weight: .black, design: .monospaced))
+                                .foregroundColor(.white)
+                            
+                            Spacer()
+                        }
+                        .overlay(
+                            HStack {
+                                Spacer()
+                                if settings.isDevelopModeEnabled {
+                                    FilmRollButtonView(rollCount: filmManager.activeRollPhotoCount) {
+                                        HapticManager.medium()
+                                        let count = filmManager.activeRollPhotoCount
+                                        developAlertMessage = "Are you sure? You took \(count) pictures. You can only get one roll of pictures for today."
+                                        isShowingDevelopAlert = true
+                                    }
+                                    .padding(.trailing, 20)
                                 }
-                                .padding(.trailing, 20)
                             }
-                        }
-                    )
-                    .padding(.top, 4)
-                    .padding(.bottom, 8)
-                    
-                    // 4:3 Aspect Ratio Camera View Finder (Full Width, Maximized Height)
-                    ZStack {
-                        CameraPreview(cameraManager: cameraManager)
-                            .grayscale(settings.isBlackAndWhiteMode ? 1.0 : 0.0)
-                            .aspectRatio(3.0 / 4.0, contentMode: .fit)
-                            .clipped()
+                        )
+                        .padding(.top, 8)
+                        .padding(.bottom, 6)
                         
-                        if let capturedImage = cameraManager.latestCapturedImage {
-                            FlyToCornerAnimationView(image: capturedImage) {
-                                cameraManager.latestCapturedImage = nil
+                        // 4:3 Aspect Ratio Camera View Finder (Strict 375x500 on iPhone 13 mini, Edge-to-Edge)
+                        ZStack {
+                            CameraPreview(cameraManager: cameraManager)
+                                .grayscale(settings.isBlackAndWhiteMode ? 1.0 : 0.0)
+                                .frame(width: screenWidth, height: previewHeight)
+                                .clipped()
+                            
+                            if let capturedImage = cameraManager.latestCapturedImage {
+                                FlyToCornerAnimationView(image: capturedImage) {
+                                    cameraManager.latestCapturedImage = nil
+                                }
+                                .frame(width: screenWidth, height: previewHeight)
                             }
                         }
+                        
+                        Spacer(minLength: 0)
+                        
+                        // Bottom Controls Bar (Positioned at the very bottom of the screen)
+                        ZStack {
+                            ShutterRingView(isAnimating: $isShutterRingAnimating)
+                            
+                            HStack {
+                                Spacer()
+                                
+                                ShutterButtonView {
+                                    triggerShutter()
+                                }
+                                .disabled(!settings.canTakePhoto)
+                                .opacity(settings.canTakePhoto ? 1.0 : 0.4)
+                                
+                                Spacer()
+                            }
+                            
+                            HStack {
+                                RecentPhotoThumbnailView(image: cameraManager.lastSavedThumbnail) {
+                                    HapticManager.selection()
+                                    isShowingPhotoLibrary = true
+                                }
+                                .padding(.leading, 28)
+                                
+                                Spacer()
+                                
+                                CameraFlipButtonView {
+                                    cameraManager.toggleCamera()
+                                }
+                                .padding(.trailing, 28)
+                            }
+                        }
+                        .padding(.bottom, 16)
                     }
-                    
-                    Spacer()
-                    
-                    // Bottom Controls Bar (Lowered to bottom of screen)
-                    ZStack {
-                        ShutterRingView(isAnimating: $isShutterRingAnimating)
-                        
-                        HStack {
-                            Spacer()
-                            
-                            ShutterButtonView {
-                                triggerShutter()
-                            }
-                            .disabled(!settings.canTakePhoto)
-                            .opacity(settings.canTakePhoto ? 1.0 : 0.4)
-                            
-                            Spacer()
-                        }
-                        
-                        HStack {
-                            RecentPhotoThumbnailView(image: cameraManager.lastSavedThumbnail) {
-                                HapticManager.selection()
-                                isShowingPhotoLibrary = true
-                            }
-                            .padding(.leading, 28)
-                            
-                            Spacer()
-                            
-                            CameraFlipButtonView {
-                                cameraManager.toggleCamera()
-                            }
-                            .padding(.trailing, 28)
-                        }
-                    }
-                    .padding(.bottom, 12)
+                case .denied:
+                    PermissionDeniedView()
+                case .notDetermined:
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
                 }
-            case .denied:
-                PermissionDeniedView()
-            case .notDetermined:
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
             }
         }
         .sheet(isPresented: $isShowingPhotoLibrary) {
