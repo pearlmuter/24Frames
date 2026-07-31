@@ -3,6 +3,7 @@ import AVFoundation
 import SwiftUI
 import Combine
 import CoreImage
+import ImageIO
 
 public enum CameraPermissionState {
     case notDetermined
@@ -214,19 +215,30 @@ public class CameraManager: NSObject, ObservableObject {
         let filter = CIFilter(name: "CIPhotoEffectMono")
         filter?.setValue(ciImage, forKey: kCIInputImageKey)
         
-        guard let outputImage = filter?.outputImage else {
+        guard let outputImage = filter?.outputImage,
+              let cgImage = ciContext.createCGImage(outputImage, from: outputImage.extent) else {
             return rawData
         }
         
-        if let heifData = ciContext.heifRepresentation(of: outputImage, format: .RGBA8, colorSpace: CGColorSpaceCreateDeviceRGB()) {
-            return heifData
+        // Determine the original photo orientation from the raw data
+        let orientation: UIImage.Orientation
+        if let source = CGImageSourceCreateWithData(rawData as CFData, nil),
+           let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
+           let rawOrientation = properties[kCGImagePropertyOrientation] as? UInt32,
+           let cgOrientation = CGImagePropertyOrientation(rawValue: rawOrientation) {
+            orientation = UIImage.Orientation(cgOrientation)
+        } else {
+            orientation = .up
         }
         
-        if let cgImage = ciContext.createCGImage(outputImage, from: outputImage.extent) {
-            let uiImage = UIImage(cgImage: cgImage, scale: 1.0, orientation: .up)
-            if let bwData = uiImage.jpegData(compressionQuality: 0.98) {
-                return bwData
-            }
+        let uiImage = UIImage(cgImage: cgImage, scale: 1.0, orientation: orientation)
+        
+        // Try HEIF first (smaller file, higher quality), fall back to JPEG
+        if let heifData = uiImage.heifData() {
+            return heifData
+        }
+        if let jpegData = uiImage.jpegData(compressionQuality: 0.98) {
+            return jpegData
         }
         
         return rawData
@@ -305,6 +317,44 @@ extension CameraManager: AVCapturePhotoCaptureDelegate {
                     }
                 }
             }
+        }
+    }
+}
+
+// MARK: - UIImage HEIF Encoding
+
+extension UIImage {
+    /// Encodes the image as HEIF data at high quality.
+    func heifData(compressionQuality: CGFloat = 0.98) -> Data? {
+        let mutableData = NSMutableData()
+        guard let destination = CGImageDestinationCreateWithData(mutableData, "public.heic" as CFString, 1, nil),
+              let cgImage = self.cgImage else {
+            return nil
+        }
+        let options: [CFString: Any] = [
+            kCGImageDestinationLossyCompressionQuality: compressionQuality
+        ]
+        CGImageDestinationAddImage(destination, cgImage, options as CFDictionary)
+        guard CGImageDestinationFinalize(destination) else {
+            return nil
+        }
+        return mutableData as Data
+    }
+}
+
+// MARK: - CGImagePropertyOrientation → UIImage.Orientation
+
+extension UIImage.Orientation {
+    init(_ cgOrientation: CGImagePropertyOrientation) {
+        switch cgOrientation {
+        case .up: self = .up
+        case .upMirrored: self = .upMirrored
+        case .down: self = .down
+        case .downMirrored: self = .downMirrored
+        case .left: self = .left
+        case .leftMirrored: self = .leftMirrored
+        case .right: self = .right
+        case .rightMirrored: self = .rightMirrored
         }
     }
 }
