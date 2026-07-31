@@ -17,7 +17,7 @@ public class VolumeButtonObserver: ObservableObject {
     public var onVolumeButtonTap: (() -> Void)?
     
     private var observation: NSKeyValueObservation?
-    private var initialVolume: Float = 0.0
+    private var lastVolume: Float = -1.0
     private lazy var volumeView: MPVolumeView = {
         let view = MPVolumeView(frame: CGRect(x: -1000, y: -1000, width: 1, height: 1))
         view.isHidden = false
@@ -45,32 +45,23 @@ public class VolumeButtonObserver: ObservableObject {
             }
         }
         
-        initialVolume = audioSession.outputVolume
+        lastVolume = audioSession.outputVolume
         
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(volumeDidChange(_:)),
-            name: NSNotification.Name("AVSystemController_SystemVolumeDidChangeNotification"),
-            object: nil
-        )
-        
-        observation = audioSession.observe(\.outputVolume, options: [.new, .old]) { [weak self] session, change in
-            DispatchQueue.main.async {
-                self?.onVolumeButtonTap?()
+        // Single KVO observer to prevent duplicate volume button callbacks
+        observation = audioSession.observe(\.outputVolume, options: [.new]) { [weak self] session, change in
+            guard let self = self, let newVolume = change.newValue else { return }
+            if abs(newVolume - self.lastVolume) > 0.001 {
+                self.lastVolume = newVolume
+                DispatchQueue.main.async {
+                    self.onVolumeButtonTap?()
+                }
             }
-        }
-    }
-    
-    @objc private func volumeDidChange(_ notification: Notification) {
-        DispatchQueue.main.async {
-            self.onVolumeButtonTap?()
         }
     }
     
     public func stopListening() {
         observation?.invalidate()
         observation = nil
-        NotificationCenter.default.removeObserver(self)
         DispatchQueue.main.async {
             self.volumeView.removeFromSuperview()
         }

@@ -68,12 +68,11 @@ public class CameraManager: NSObject, ObservableObject {
             self.captureSession.beginConfiguration()
             self.captureSession.sessionPreset = .photo
             
-            // Remove existing input if any
+            // Lock lens to Primary Wide (.builtInWideAngleCamera)
             if let currentInput = self.videoDeviceInput {
                 self.captureSession.removeInput(currentInput)
             }
             
-            // Lock lens to Primary Wide (.builtInWideAngleCamera)
             guard let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: self.cameraPosition) else {
                 DispatchQueue.main.async {
                     self.errorMessage = "Primary Wide camera is unavailable for position: \(self.cameraPosition.rawValue)."
@@ -105,7 +104,6 @@ public class CameraManager: NSObject, ObservableObject {
             if !self.captureSession.outputs.contains(self.photoOutput) {
                 if self.captureSession.canAddOutput(self.photoOutput) {
                     self.captureSession.addOutput(self.photoOutput)
-                    
                     self.photoOutput.isHighResolutionCaptureEnabled = true
                     self.photoOutput.maxPhotoQualityPrioritization = .speed
                 } else {
@@ -191,11 +189,7 @@ public class CameraManager: NSObject, ObservableObject {
                 
                 if connection.isVideoMirroringSupported {
                     connection.automaticallyAdjustsVideoMirroring = false
-                    if self.cameraPosition == .back {
-                        connection.isVideoMirrored = false
-                    } else {
-                        connection.isVideoMirrored = true
-                    }
+                    connection.isVideoMirrored = (self.cameraPosition == .front)
                 }
             }
             
@@ -220,6 +214,11 @@ public class CameraManager: NSObject, ObservableObject {
         
         guard let outputImage = filter?.outputImage else {
             return rawData
+        }
+        
+        // Preserve 10-bit HEIF/HEIC encoding foundation
+        if let heifData = ciContext.heifRepresentation(of: outputImage, format: .RGBA8, colorSpace: CGColorSpaceCreateDeviceRGB()) {
+            return heifData
         }
         
         if let cgImage = ciContext.createCGImage(outputImage, from: outputImage.extent) {

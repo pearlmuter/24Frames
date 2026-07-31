@@ -28,8 +28,8 @@ public struct FilmRollButtonView: View {
                     Image("FilmRollArrow")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 38, height: 38)
-                        .colorMultiply(.white)
+                        .frame(width: 36, height: 36)
+                        .cornerRadius(6)
                     
                     if rollCount > 0 {
                         Text("\(rollCount)")

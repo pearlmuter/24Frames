@@ -1,5 +1,21 @@
 import SwiftUI
 
+struct LandscapeRotationModifier: ViewModifier {
+    let angle: Double
+    
+    func body(content: Content) -> some View {
+        content
+            .rotationEffect(.degrees(angle))
+            .animation(.easeInOut(duration: 0.3), value: angle)
+    }
+}
+
+extension View {
+    func landscapeRotation(_ angle: Double) -> some View {
+        self.modifier(LandscapeRotationModifier(angle: angle))
+    }
+}
+
 public struct ContentView: View {
     @StateObject private var cameraManager = CameraManager()
     @StateObject private var volumeObserver = VolumeButtonObserver()
@@ -45,8 +61,7 @@ public struct ContentView: View {
                                         .foregroundColor(Color(red: 0.95, green: 0.75, blue: 0.1)) // Airport sign / Mustard yellow
                                 }
                             }
-                            .rotationEffect(.degrees(orientationObserver.rotationAngle))
-                            .animation(.easeInOut(duration: 0.3), value: orientationObserver.rotationAngle)
+                            .landscapeRotation(orientationObserver.rotationAngle)
                             
                             Spacer()
                         }
@@ -63,8 +78,7 @@ public struct ContentView: View {
                                         developAlertMessage = "Are you sure? You took \(count) pictures. You can only get one roll of pictures for today."
                                         isShowingDevelopAlert = true
                                     }
-                                    .rotationEffect(.degrees(orientationObserver.rotationAngle))
-                                    .animation(.easeInOut(duration: 0.3), value: orientationObserver.rotationAngle)
+                                    .landscapeRotation(orientationObserver.rotationAngle)
                                     .padding(.trailing, 20)
                                 }
                             }
@@ -89,11 +103,10 @@ public struct ContentView: View {
                         
                         Spacer(minLength: 0)
                         
-                        // Bottom Controls Bar (Rotates with device orientation)
+                        // Bottom Controls Bar (Rotates cleanly with device orientation)
                         ZStack {
                             ShutterRingView(isAnimating: $isShutterRingAnimating)
-                                .rotationEffect(.degrees(orientationObserver.rotationAngle))
-                                .animation(.easeInOut(duration: 0.3), value: orientationObserver.rotationAngle)
+                                .landscapeRotation(orientationObserver.rotationAngle)
                             
                             HStack {
                                 Spacer()
@@ -103,8 +116,7 @@ public struct ContentView: View {
                                 }
                                 .disabled(!settings.canTakePhoto)
                                 .opacity(settings.canTakePhoto ? 1.0 : 0.4)
-                                .rotationEffect(.degrees(orientationObserver.rotationAngle))
-                                .animation(.easeInOut(duration: 0.3), value: orientationObserver.rotationAngle)
+                                .landscapeRotation(orientationObserver.rotationAngle)
                                 
                                 Spacer()
                             }
@@ -115,8 +127,7 @@ public struct ContentView: View {
                                         HapticManager.selection()
                                         isShowingPhotoLibrary = true
                                     }
-                                    .rotationEffect(.degrees(orientationObserver.rotationAngle))
-                                    .animation(.easeInOut(duration: 0.3), value: orientationObserver.rotationAngle)
+                                    .landscapeRotation(orientationObserver.rotationAngle)
                                     .padding(.leading, 28)
                                 } else {
                                     Spacer()
@@ -128,8 +139,7 @@ public struct ContentView: View {
                                 CameraFlipButtonView {
                                     cameraManager.toggleCamera()
                                 }
-                                .rotationEffect(.degrees(orientationObserver.rotationAngle))
-                                .animation(.easeInOut(duration: 0.3), value: orientationObserver.rotationAngle)
+                                .landscapeRotation(orientationObserver.rotationAngle)
                                 .padding(.trailing, 28)
                             }
                         }
