@@ -146,9 +146,18 @@ public class AppSettings: ObservableObject {
     }
     
     private func setupNotificationObservers() {
-        // When the user changes a toggle in system Settings → 24Frames, iOS writes the
-        // new value to the app's UserDefaults plist on disk. When the app returns to the
-        // foreground, we pull those disk values into our @Published properties.
+        // didBecomeActive is the most reliable notification for detecting return from
+        // the Settings app — it fires even on quick swipe-back gestures where
+        // willEnterForeground may not fire.
+        NotificationCenter.default
+            .publisher(for: UIApplication.didBecomeActiveNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                print("[AppSettings] didBecomeActive — syncing from UserDefaults")
+                self?.syncFromUserDefaults()
+            }
+            .store(in: &cancellables)
+        
         NotificationCenter.default
             .publisher(for: UIApplication.willEnterForegroundNotification)
             .receive(on: DispatchQueue.main)
