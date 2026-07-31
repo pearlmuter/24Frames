@@ -53,6 +53,16 @@ public class FilmDevelopManager: ObservableObject {
         refreshActiveCount()
     }
     
+    private func exportPhotosToLibrary(_ photoFiles: [String], from dir: URL, photoSaver: PhotoSaver) {
+        for fileName in photoFiles {
+            let url = dir.appendingPathComponent(fileName)
+            if let data = try? Data(contentsOf: url) {
+                photoSaver.savePhotoData(data) { _ in }
+            }
+            try? fileManager.removeItem(at: url)
+        }
+    }
+    
     public func sendRollToDevelop(speed: DevelopmentSpeed, photoSaver: PhotoSaver, completion: @escaping (Int) -> Void) {
         let files = (try? fileManager.contentsOfDirectory(atPath: activeRollDirectory.path)) ?? []
         let photoFiles = files.filter { $0.hasSuffix(".heic") || $0.hasSuffix(".jpg") }
@@ -81,13 +91,7 @@ public class FilmDevelopManager: ObservableObject {
         
         if targetDate <= now {
             // Immediate export
-            for fileName in photoFiles {
-                let url = activeRollDirectory.appendingPathComponent(fileName)
-                if let data = try? Data(contentsOf: url) {
-                    photoSaver.savePhotoData(data) { _ in }
-                }
-                try? fileManager.removeItem(at: url)
-            }
+            exportPhotosToLibrary(photoFiles, from: activeRollDirectory, photoSaver: photoSaver)
             refreshActiveCount()
             completion(count)
         } else {
@@ -129,12 +133,7 @@ public class FilmDevelopManager: ObservableObject {
             }
             
             if manifest.targetDevelopDate <= now {
-                for fileName in manifest.fileNames {
-                    let photoURL = rollDir.appendingPathComponent(fileName)
-                    if let data = try? Data(contentsOf: photoURL) {
-                        photoSaver.savePhotoData(data) { _ in }
-                    }
-                }
+                exportPhotosToLibrary(manifest.fileNames, from: rollDir, photoSaver: photoSaver)
                 try? fileManager.removeItem(at: rollDir)
             }
         }

@@ -52,7 +52,7 @@ public struct CameraPreview: UIViewRepresentable {
         @objc public func handleTap(_ gesture: UITapGestureRecognizer) {
             guard let view = gesture.view else { return }
             let point = gesture.location(in: view)
-            cameraManager.focus(at: point)
+            cameraManager.setFocusAndExposure(at: point, in: view.bounds.size)
         }
     }
 }

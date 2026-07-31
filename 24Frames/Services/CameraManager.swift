@@ -110,7 +110,7 @@ public class CameraManager: NSObject, ObservableObject {
                     self.photoOutput.maxPhotoQualityPrioritization = .speed
                     
                     if self.photoOutput.availablePhotoCodecTypes.contains(.hevc) {
-                        // HEVC codec
+                        // HEVC codec supported
                     }
                 } else {
                     DispatchQueue.main.async {
@@ -217,19 +217,21 @@ public class CameraManager: NSObject, ObservableObject {
         let filter = CIFilter(name: "CIPhotoEffectMono")
         filter?.setValue(ciImage, forKey: kCIInputImageKey)
         
-        guard let outputImage = filter?.outputImage,
-              let cgImage = ciContext.createCGImage(outputImage, from: outputImage.extent) else {
+        guard let outputImage = filter?.outputImage else {
             return rawData
         }
         
-        let uiImage = UIImage(cgImage: cgImage, scale: 1.0, orientation: .up)
-        return uiImage.jpegData(compressionQuality: 0.95) ?? rawData
+        if let heicData = ciContext.heifRepresentation(of: outputImage, format: .RGBA8, colorSpace: CGColorSpaceCreateDeviceRGB()) {
+            return heicData
+        }
+        
+        return rawData
     }
     
-    public func focus(at point: CGPoint) {
+    public func setFocusAndExposure(at point: CGPoint, in viewSize: CGSize) {
         sessionQueue.async { [weak self] in
-            guard let device = self?.videoDeviceInput?.device else { return }
-            let normalizedPoint = CGPoint(x: point.y, y: 1.0 - point.x)
+            guard let device = self?.videoDeviceInput?.device, viewSize.width > 0, viewSize.height > 0 else { return }
+            let normalizedPoint = CGPoint(x: point.y / viewSize.height, y: 1.0 - (point.x / viewSize.width))
             
             do {
                 try device.lockForConfiguration()

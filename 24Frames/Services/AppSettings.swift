@@ -2,9 +2,9 @@ import SwiftUI
 import Combine
 
 public enum DevelopmentSpeed: String, CaseIterable, Identifiable, Codable {
-    case immediate = "Immediately"
-    case twoHours = "2 Hours"
-    case overnight = "Overnight (07:00 AM)"
+    case immediate = "Develop immediately"
+    case twoHours = "Fast development: 2 Hours"
+    case overnight = "Overnight development"
     
     public var id: String { self.rawValue }
 }
@@ -37,6 +37,10 @@ public class AppSettings: ObservableObject {
         willSet { objectWillChange.send() }
     }
     
+    @AppStorage("hasSubmittedRollToday") public var hasSubmittedRollToday: Bool = false {
+        willSet { objectWillChange.send() }
+    }
+    
     @AppStorage("lastResetDateString") private var lastResetDateString: String = "" {
         willSet { objectWillChange.send() }
     }
@@ -53,6 +57,7 @@ public class AppSettings: ObservableObject {
         if lastResetDateString != todayString {
             lastResetDateString = todayString
             photosTakenToday = 0
+            hasSubmittedRollToday = false
         }
     }
     
@@ -65,7 +70,9 @@ public class AppSettings: ObservableObject {
     }
     
     public var canTakePhoto: Bool {
+        checkDailyReset()
         if isInfinitePicturesMode { return true }
+        if isDevelopModeEnabled && hasSubmittedRollToday { return false }
         return remainingPhotosToday > 0
     }
     
@@ -76,5 +83,6 @@ public class AppSettings: ObservableObject {
     
     public func resetPhotoCountForNewRoll() {
         photosTakenToday = 0
+        hasSubmittedRollToday = false
     }
 }

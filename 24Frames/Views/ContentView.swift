@@ -77,7 +77,7 @@ public struct ContentView: View {
                         Button(action: {
                             HapticManager.medium()
                             let count = filmManager.activeRollPhotoCount
-                            developAlertMessage = "Are you sure? You took \(count) picture\(count == 1 ? "" : "s"). You can only develop one roll of pictures for today."
+                            developAlertMessage = "Are you sure? You took \(count) pictures. You can only get one roll of pictures for today."
                             isShowingDevelopAlert = true
                         }) {
                             HStack(spacing: 8) {
@@ -145,14 +145,16 @@ public struct ContentView: View {
             Alert(
                 title: Text("Send Roll to Develop?"),
                 message: Text(developAlertMessage),
-                primaryButton: .default(Text("Develop Roll")) {
+                primaryButton: .default(Text("OK")) {
                     filmManager.sendRollToDevelop(speed: settings.developmentSpeed, photoSaver: PhotoSaver()) { count in
                         if settings.isInfinitePicturesMode {
                             settings.resetPhotoCountForNewRoll()
+                        } else {
+                            settings.hasSubmittedRollToday = true
                         }
                     }
                 },
-                secondaryButton: .cancel()
+                secondaryButton: .cancel(Text("Cancel"))
             )
         }
         .onAppear {
@@ -183,8 +185,11 @@ public struct ContentView: View {
     }
     
     private func triggerRingAnimation() {
-        withAnimation {
+        withAnimation(.easeOut(duration: 0.4)) {
             isShutterRingAnimating = true
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            isShutterRingAnimating = false
         }
     }
 }
