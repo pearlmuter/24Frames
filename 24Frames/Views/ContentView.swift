@@ -151,26 +151,26 @@ public struct ContentView: View {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
                 }
+                
+                if isShowingDevelopAlert {
+                    DevelopWarningModalView(
+                        photoCount: filmManager.activeRollPhotoCount,
+                        isInfiniteMode: settings.isInfinitePicturesMode,
+                        onConfirm: {
+                            isShowingDevelopAlert = false
+                            filmManager.sendRollToDevelop(speed: settings.developmentSpeed, photoSaver: PhotoSaver()) { count in
+                                settings.submitRollForDevelopment()
+                            }
+                        },
+                        onCancel: {
+                            isShowingDevelopAlert = false
+                        }
+                    )
+                }
             }
         }
         .sheet(isPresented: $isShowingPhotoLibrary) {
             PhotoLibraryPickerView()
-        }
-        .alert(isPresented: $isShowingDevelopAlert) {
-            Alert(
-                title: Text("Send Roll to Develop?"),
-                message: Text(developAlertMessage),
-                primaryButton: .default(Text("OK")) {
-                    filmManager.sendRollToDevelop(speed: settings.developmentSpeed, photoSaver: PhotoSaver()) { count in
-                        if settings.isInfinitePicturesMode {
-                            settings.resetPhotoCountForNewRoll()
-                        } else {
-                            settings.hasSubmittedRollToday = true
-                        }
-                    }
-                },
-                secondaryButton: .cancel(Text("Cancel"))
-            )
         }
         .onAppear {
             cameraManager.onPhotoCaptured = {

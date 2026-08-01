@@ -23,6 +23,7 @@
 		100000000000000000000013 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000014 /* Assets.xcassets */; };
 		100000000000000000000014 /* Views/CameraFlipButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000015 /* Views/CameraFlipButtonView.swift */; };
 		100000000000000000000015 /* Views/FlyToCornerAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000016 /* Views/FlyToCornerAnimationView.swift */; };
+		100000000000000000000031 /* Views/DevelopWarningModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000031 /* Views/DevelopWarningModalView.swift */; };
 		100000000000000000000016 /* Services/HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000017 /* Services/HapticManager.swift */; };
 		100000000000000000000017 /* Views/PhotoLibraryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000018 /* Views/PhotoLibraryPickerView.swift */; };
 		100000000000000000000018 /* Views/RecentPhotoThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200000000000000000000019 /* Views/RecentPhotoThumbnailView.swift */; };
@@ -105,6 +106,7 @@
 		200000000000000000000028 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		200000000000000000000029 /* Views/FilmRollButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/FilmRollButtonView.swift; sourceTree = "<group>"; };
 		200000000000000000000030 /* Services/OrientationObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Services/OrientationObserver.swift; sourceTree = "<group>"; };
+		200000000000000000000031 /* Views/DevelopWarningModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views/DevelopWarningModalView.swift; sourceTree = "<group>"; };
 		200000000000000000000022 /* TwentyFourFramesWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwentyFourFramesWidget.swift; sourceTree = "<group>"; };
 		200000000000000000000023 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		500000000000000000000001 /* 24Frames.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = 24Frames.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -183,6 +185,7 @@
 				200000000000000000000016 /* Views/FlyToCornerAnimationView.swift */,
 				200000000000000000000018 /* Views/PhotoLibraryPickerView.swift */,
 				200000000000000000000019 /* Views/RecentPhotoThumbnailView.swift */,
+				200000000000000000000031 /* Views/DevelopWarningModalView.swift */,
 			);
 			path = 24Frames;
 			sourceTree = "<group>";
@@ -379,6 +382,7 @@
 				100000000000000000000025 /* Views/SettingsView.swift in Sources */,
 				100000000000000000000028 /* Views/FilmRollButtonView.swift in Sources */,
 				100000000000000000000029 /* Services/OrientationObserver.swift in Sources */,
+				100000000000000000000031 /* Views/DevelopWarningModalView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

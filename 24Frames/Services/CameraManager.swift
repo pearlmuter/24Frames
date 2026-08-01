@@ -220,21 +220,22 @@ public class CameraManager: NSObject, ObservableObject {
             return rawData
         }
         
-        // Determine the original photo orientation from the raw data
-        let orientation: UIImage.Orientation
+        // Determine the original photo orientation from the raw data EXIF properties
+        let rawCGOrientation: CGImagePropertyOrientation
         if let source = CGImageSourceCreateWithData(rawData as CFData, nil),
            let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
            let rawOrientation = properties[kCGImagePropertyOrientation] as? UInt32,
            let cgOrientation = CGImagePropertyOrientation(rawValue: rawOrientation) {
-            orientation = UIImage.Orientation(cgOrientation)
+            rawCGOrientation = cgOrientation
         } else {
-            orientation = .up
+            rawCGOrientation = .up
         }
         
+        let orientation = UIImage.Orientation(rawCGOrientation)
         let uiImage = UIImage(cgImage: cgImage, scale: 1.0, orientation: orientation)
         
-        // Try HEIF first (smaller file, higher quality), fall back to JPEG
-        if let heifData = uiImage.heifData() {
+        // Try HEIF first with explicit EXIF orientation property, fall back to JPEG
+        if let heifData = uiImage.heifData(orientation: rawCGOrientation) {
             return heifData
         }
         if let jpegData = uiImage.jpegData(compressionQuality: 0.98) {
@@ -324,16 +325,19 @@ extension CameraManager: AVCapturePhotoCaptureDelegate {
 // MARK: - UIImage HEIF Encoding
 
 extension UIImage {
-    /// Encodes the image as HEIF data at high quality.
-    func heifData(compressionQuality: CGFloat = 0.98) -> Data? {
+    /// Encodes the image as HEIF data at high quality, preserving EXIF orientation if provided.
+    func heifData(compressionQuality: CGFloat = 0.98, orientation: CGImagePropertyOrientation? = nil) -> Data? {
         let mutableData = NSMutableData()
         guard let destination = CGImageDestinationCreateWithData(mutableData, "public.heic" as CFString, 1, nil),
               let cgImage = self.cgImage else {
             return nil
         }
-        let options: [CFString: Any] = [
+        var options: [CFString: Any] = [
             kCGImageDestinationLossyCompressionQuality: compressionQuality
         ]
+        if let orientation = orientation {
+            options[kCGImagePropertyOrientation] = orientation.rawValue
+        }
         CGImageDestinationAddImage(destination, cgImage, options as CFDictionary)
         guard CGImageDestinationFinalize(destination) else {
             return nil

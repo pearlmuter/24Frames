@@ -66,4 +66,28 @@ final class AppSettingsTests: XCTestCase {
         XCTAssertEqual(settings.remainingPhotosToday, 18)
         XCTAssertTrue(settings.canTakePhoto)
     }
+    
+    func testSubmitRollForDevelopmentInStandardModeSetsCountToZero() {
+        let settings = AppSettings.shared
+        settings.isDevelopModeEnabled = true
+        settings.isInfinitePicturesMode = false
+        settings.photosTakenToday = 10
+        
+        settings.submitRollForDevelopment()
+        
+        XCTAssertEqual(settings.remainingPhotosToday, 0)
+        XCTAssertFalse(settings.canTakePhoto)
+    }
+    
+    func testSubmitRollForDevelopmentInInfiniteModeResetsCountToTwentyFour() {
+        let settings = AppSettings.shared
+        settings.isDevelopModeEnabled = true
+        settings.isInfinitePicturesMode = true
+        settings.photosTakenToday = 10
+        
+        settings.submitRollForDevelopment()
+        
+        XCTAssertEqual(settings.remainingPhotosToday, 24)
+        XCTAssertTrue(settings.canTakePhoto)
+    }
 }
