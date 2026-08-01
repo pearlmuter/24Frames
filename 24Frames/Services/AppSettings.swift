@@ -24,6 +24,20 @@ public class AppSettings: ObservableObject {
             if isInfinitePicturesMode != oldValue {
                 UserDefaults.standard.set(isInfinitePicturesMode, forKey: "isInfinitePicturesMode")
                 print("[AppSettings] isInfinitePicturesMode changed: \(oldValue) → \(isInfinitePicturesMode)")
+                if isInfinitePicturesMode {
+                    let targetRolls = (photosTakenToday / 24) + 1
+                    if unlockedRollsCount < targetRolls {
+                        unlockedRollsCount = targetRolls
+                    }
+                }
+            }
+        }
+    }
+    
+    @Published public var unlockedRollsCount: Int = 1 {
+        didSet {
+            if unlockedRollsCount != oldValue {
+                UserDefaults.standard.set(unlockedRollsCount, forKey: "unlockedRollsCount")
             }
         }
     }
@@ -118,6 +132,7 @@ public class AppSettings: ObservableObject {
         let newSpeed = defaults.string(forKey: "developmentSpeedRaw") ?? DevelopmentSpeed.immediate.rawValue
         let newPhotosTaken = defaults.integer(forKey: "photosTakenToday")
         let newHasSubmitted = readBool(forKey: "hasSubmittedRollToday")
+        let newUnlocked = max(1, defaults.integer(forKey: "unlockedRollsCount"))
         
         print("[AppSettings] syncFromUserDefaults — disk: BW=\(newBW), infinite=\(newInfinite), develop=\(newDevelop), speed=\(newSpeed) | memory: BW=\(isBlackAndWhiteMode), infinite=\(isInfinitePicturesMode), develop=\(isDevelopModeEnabled)")
         
@@ -129,6 +144,7 @@ public class AppSettings: ObservableObject {
         if developmentSpeedRaw != newSpeed { developmentSpeedRaw = newSpeed }
         if photosTakenToday != newPhotosTaken { photosTakenToday = newPhotosTaken }
         if hasSubmittedRollToday != newHasSubmitted { hasSubmittedRollToday = newHasSubmitted }
+        if unlockedRollsCount != newUnlocked { unlockedRollsCount = newUnlocked }
     }
     
     /// Reads a bool from UserDefaults, handling the various representations that
@@ -189,8 +205,10 @@ public class AppSettings: ObservableObject {
             lastResetDateString = todayString
             photosTakenToday = 0
             hasSubmittedRollToday = false
+            unlockedRollsCount = 1
             UserDefaults.standard.set(0, forKey: "photosTakenToday")
             UserDefaults.standard.set(false, forKey: "hasSubmittedRollToday")
+            UserDefaults.standard.set(1, forKey: "unlockedRollsCount")
         }
     }
     
@@ -201,12 +219,17 @@ public class AppSettings: ObservableObject {
         if isDevelopModeEnabled && hasSubmittedRollToday && !isInfinitePicturesMode {
             return 0
         }
-        // Always show remaining photos in the current 24-photo roll.
-        let photosInRoll = photosTakenToday % 24
-        if photosInRoll == 0 && photosTakenToday > 0 {
-            return isInfinitePicturesMode ? 24 : 0
+        let currentRollIndex = photosTakenToday / 24
+        let photosInCurrentRoll = photosTakenToday % 24
+        
+        if photosInCurrentRoll == 0 && photosTakenToday > 0 {
+            if isInfinitePicturesMode || currentRollIndex < unlockedRollsCount {
+                return 24
+            } else {
+                return 0
+            }
         }
-        return 24 - photosInRoll
+        return 24 - photosInCurrentRoll
     }
     
     public var canTakePhoto: Bool {
@@ -230,13 +253,21 @@ public class AppSettings: ObservableObject {
     public func incrementPhotoCount() {
         checkDailyReset()
         photosTakenToday += 1
+        if isInfinitePicturesMode {
+            let currentRolls = (photosTakenToday / 24) + 1
+            if unlockedRollsCount < currentRolls {
+                unlockedRollsCount = currentRolls
+            }
+        }
         UserDefaults.standard.set(photosTakenToday, forKey: "photosTakenToday")
     }
     
     public func resetPhotoCountForNewRoll() {
         photosTakenToday = 0
         hasSubmittedRollToday = false
+        unlockedRollsCount = 1
         UserDefaults.standard.set(0, forKey: "photosTakenToday")
         UserDefaults.standard.set(false, forKey: "hasSubmittedRollToday")
+        UserDefaults.standard.set(1, forKey: "unlockedRollsCount")
     }
 }

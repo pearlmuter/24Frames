@@ -6,10 +6,10 @@ final class AppSettingsTests: XCTestCase {
     override func setUp() {
         super.setUp()
         let settings = AppSettings.shared
+        settings.resetPhotoCountForNewRoll()
         settings.isInfinitePicturesMode = false
         settings.isBlackAndWhiteMode = false
         settings.isDevelopModeEnabled = false
-        settings.photosTakenToday = 0
         settings.developmentSpeed = .immediate
         settings.checkDailyReset()
     }
@@ -88,6 +88,30 @@ final class AppSettingsTests: XCTestCase {
         settings.submitRollForDevelopment()
         
         XCTAssertEqual(settings.remainingPhotosToday, 24)
+        XCTAssertTrue(settings.canTakePhoto)
+    }
+    
+    func testInfiniteModeToggleRetentionAtRollBoundary() {
+        let settings = AppSettings.shared
+        settings.resetPhotoCountForNewRoll()
+        settings.photosTakenToday = 24
+        XCTAssertEqual(settings.remainingPhotosToday, 0)
+        
+        // Turn infinite ON -> unlocks roll #2 (showing 24)
+        settings.isInfinitePicturesMode = true
+        XCTAssertEqual(settings.remainingPhotosToday, 24)
+        
+        // Turn infinite OFF -> roll #2 stays unlocked! Counter stays 24
+        settings.isInfinitePicturesMode = false
+        XCTAssertEqual(settings.remainingPhotosToday, 24)
+        XCTAssertTrue(settings.canTakePhoto)
+        
+        // Shoot 5 photos -> counter becomes 19
+        for _ in 0..<5 {
+            settings.incrementPhotoCount()
+        }
+        XCTAssertEqual(settings.photosTakenToday, 29)
+        XCTAssertEqual(settings.remainingPhotosToday, 19)
         XCTAssertTrue(settings.canTakePhoto)
     }
 }
